@@ -1,0 +1,13 @@
+{
+    "canisters": {
+        "messages": {
+            "type": "custom",
+            "main": "src/index.ts",
+            "candid": "src/index.did",
+            "build": "npx azle messages",
+            "wasm": ".azle/messages/messages.wasm",
+            "gzip": true
+        }
+    }
+}
+
