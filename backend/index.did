@@ -1,0 +1,14 @@
+service: () -> {
+    borrowTokens: (text, float64) -> (nat);
+    depositCollateral: (text, float64) -> (nat);
+    getAmountLanded: (text) -> (opt nat) query;
+    getCollateralIcpToken: (text) -> (opt nat) query;
+    getDebtInformation: (text) -> (opt nat) query;
+    getDepositedAmountForLending: (text) -> (opt nat) query;
+    getHasDebt: (text) -> (opt bool) query;
+    getHealthFactor: (text) -> (text);
+    getckEthPool: () -> (nat) query;
+    lendckEthToken: (text, float64) -> (nat);
+    liquidation: (text, text, float64) -> ();
+    repayDebt: (text, float64) -> ();
+}

@@ -1,73 +1,73 @@
-# University of Zimbabwe ICP Hackathon
+# Micro DeFi
 
-Welcome to the University of Zimbabwe's Internet Computer Protocol (ICP) Hackathon! This event is dedicated to exploring the possibilities of the Internet Computer using TypeScript. Here, you will find all the resources you need to get started, learn, and create innovative projects.
+### This is the updated version of the DACADE course starter example, using the latest version of Azle cdk with updated syntax for typescript canister development.
 
-## About the Hackathon
-
-This hackathon is an exciting opportunity for students to dive into the world of decentralized applications using the Internet Computer Protocol. It's a great chance to collaborate, innovate, and develop your skills in TypeScript and blockchain technology.
-
-## Getting Started
-
-Before you begin, make sure you have the following prerequisites installed:
-
-- Node.js
-- TypeScript
-- Git
+This example project will help you to deploy your first canister (application) to the Internet Computer (IC) decentralized cloud. It is a simple getter/setter canister. You can always refer to [The Azle Book](https://demergent-labs.github.io/azle/) for more in-depth documentation.
 
 ## Prerequisites
 
-Before diving into the hackathon, ensure you have the following prerequisites installed and set up:
-
-- **Node.js**: A JavaScript runtime built on Chrome's V8 JavaScript engine. [Node.js Official Guide](https://nodejs.org/en/docs/)
-- **TypeScript**: A typed superset of JavaScript that compiles to plain JavaScript. [TypeScript Documentation](https://www.typescriptlang.org/docs/)
-- **Git**: A distributed version control system to track changes in source code during software development. [Git Basics](https://git-scm.com/book/en/v2/Getting-Started-Git-Basics)
-- **Internet Computer Protocol (ICP) SDK**: Essential tools and libraries for developing on the Internet Computer. Make sure to download and install the SDK to develop and deploy your applications. [ICP SDK Installation Guide](https://sdk.dfinity.org/docs/developers-guide/install-upgrade-remove.html)
-
-It's important to familiarize yourself with these tools as they form the backbone of your development environment for this hackathon.
+- Follow these instructions from the Azle Book to [install all the required tools and set up your environment](https://demergent-labs.github.io/azle/installation.html). If you have already installed the required tools, you can skip this step.
 
 
-## Workshop Resources
+After you have installed the required tools, you can move on to the next step.
 
-We've organized several workshops to help you get up to speed with ICP and TypeScript. Here are some materials from those sessions:
+## Clone the repository
 
-1. Introduction to Internet Computer Protocol
-2. Building Decentralized Applications with TypeScript
-3. Advanced ICP Techniques
+```bash
 
-(Links to workshop materials and recordings)
+Clone this repository and navigate to the `message_board` directory:
 
-## Project Submission Guidelines
+```bash
+git clone https://github.com/mzansiweb3-icp-hub/message_board.git
+cd message_board
+```
 
-To participate in the hackathon, follow these steps:
+## Install dependencies
 
-1. Form a team of 3-5 members.
-2. Fork this repository.
-3. Develop your project in your team's fork.
-4. Submit your project by creating a pull request to this repository before the deadline.
+```bash
+npm install
+```
 
-Detailed submission instructions are available [here](#).
+## Start the local replica
 
-## Judging Criteria
+```bash
+dfx start --clean --background
+```
 
-Projects will be judged based on the following criteria:
+Deploy the canister locally:
 
-- Innovation and originality
-- Technical complexity
-- Utility and practicality
-- Presentation and documentation
+```bash
+dfx deploy
+```
 
-## Prizes
+You should see something like this:
 
-Exciting prizes await the winners! Stay tuned for more details.
+```bash
+Deploying all canisters.
+Creating canisters...
+Creating canister message_board...
+message_board canister created with canister id: by6od-j4aaa-aaaaa-qaadq-cai
+Building canisters...
+Executing 'npx azle message_board'
 
-## Code of Conduct
+Building canister message_board
 
-We are committed to providing a welcoming and harassment-free experience for everyone.
+Done in 17.16s
 
-## Support and Community
+🎉 Built canister message_board at .azle/message_board/message_board.wasm
 
-Got questions? Join our community chat on [Discord](https://discord.com/invite/WtPzY28q) or [Telegram](https://t.me/+yGSEEcANCkQ3MTY8).
+Installing canisters...
+Creating UI canister on the local network.
+The UI canister on the "local" network is "avqkn-guaaa-aaaaa-qaaea-cai"
+Installing code for canister message_board, with canister ID by6od-j4aaa-aaaaa-qaadq-cai
+Deployed canisters.
+URLs:
+  Backend canister via Candid interface:
+    message_board: http://127.0.0.1:4943/?canisterId=avqkn-guaaa-aaaaa-qaaea-cai&id=by6od-j4aaa-aaaaa-qaadq-cai
 
----
+```
 
-Best of luck to all participants, and happy coding!
+## Interact with the canister
+
+You can now interact with the canister using the the candid interface URL provided in the output above.
+
