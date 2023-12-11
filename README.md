@@ -1,73 +1,60 @@
-# University of Zimbabwe ICP Hackathon
+# Micro DeFi
 
-Welcome to the University of Zimbabwe's Internet Computer Protocol (ICP) Hackathon! This event is dedicated to exploring the possibilities of the Internet Computer using TypeScript. Here, you will find all the resources you need to get started, learn, and create innovative projects.
-
-## About the Hackathon
-
-This hackathon is an exciting opportunity for students to dive into the world of decentralized applications using the Internet Computer Protocol. It's a great chance to collaborate, innovate, and develop your skills in TypeScript and blockchain technology.
-
-## Getting Started
-
-Before you begin, make sure you have the following prerequisites installed:
-
-- Node.js
-- TypeScript
-- Git
+### Defi project where users can exchange their tokens with ease
 
 ## Prerequisites
 
-Before diving into the hackathon, ensure you have the following prerequisites installed and set up:
+- Follow these instructions from the Azle Book to [install all the required tools and set up your environment](https://demergent-labs.github.io/azle/installation.html). If you have already installed the required tools, you can skip this step.
 
-- **Node.js**: A JavaScript runtime built on Chrome's V8 JavaScript engine. [Node.js Official Guide](https://nodejs.org/en/docs/)
-- **TypeScript**: A typed superset of JavaScript that compiles to plain JavaScript. [TypeScript Documentation](https://www.typescriptlang.org/docs/)
-- **Git**: A distributed version control system to track changes in source code during software development. [Git Basics](https://git-scm.com/book/en/v2/Getting-Started-Git-Basics)
-- **Internet Computer Protocol (ICP) SDK**: Essential tools and libraries for developing on the Internet Computer. Make sure to download and install the SDK to develop and deploy your applications. [ICP SDK Installation Guide](https://sdk.dfinity.org/docs/developers-guide/install-upgrade-remove.html)
+After you have installed the required tools, you can move on to the next step.
 
-It's important to familiarize yourself with these tools as they form the backbone of your development environment for this hackathon.
+## Clone the repository
 
+```bash
 
-## Workshop Resources
+Clone this repository and navigate to the `micro_defi` directory:
+```
 
-We've organized several workshops to help you get up to speed with ICP and TypeScript. Here are some materials from those sessions:
+```bash
+git clone https://github.com/sameicp/uz-hackathon-nov-2023/tree/micro-defi
+cd micro_defi
+```
 
-1. Introduction to Internet Computer Protocol
-2. Building Decentralized Applications with TypeScript
-3. Advanced ICP Techniques
+## Install dependencies
 
-(Links to workshop materials and recordings)
+```bash
+npm install
+```
 
-## Project Submission Guidelines
+## Start the local replica
 
-To participate in the hackathon, follow these steps:
+```bash
+dfx start --clean --background
+```
 
-1. Form a team of 3-5 members.
-2. Fork this repository.
-3. Develop your project in your team's fork.
-4. Submit your project by creating a pull request to this repository before the deadline.
+Deploy the canister locally:
 
-Detailed submission instructions are available [here](#).
+```bash
+dfx deploy
+```
 
-## Judging Criteria
+## Interact with the canister
 
-Projects will be judged based on the following criteria:
+You can now interact with the canister using the the candid interface URL provided in the output above.
 
-- Innovation and originality
-- Technical complexity
-- Utility and practicality
-- Presentation and documentation
+You can run the following command to interact with frontend
 
-## Prizes
+```bash
+npm run start
+```
 
-Exciting prizes await the winners! Stay tuned for more details.
+# Link to
 
-## Code of Conduct
+- [YouTube video](https://youtu.be/69FpEYvmBCs)
+- [Frontend Canister](https://6dzvv-miaaa-aaaak-qcwgq-cai.icp0.io/)
+- [Backend Canister](https://a4gq6-oaaaa-aaaab-qaa4q-cai.raw.icp0.io/?id=6k26j-2aaaa-aaaak-qcwha-cai)
 
-We are committed to providing a welcoming and harassment-free experience for everyone.
+# Improvements to be done on the project
 
-## Support and Community
-
-Got questions? Join our community chat on [Discord](https://discord.com/invite/WtPzY28q) or [Telegram](https://t.me/+yGSEEcANCkQ3MTY8).
-
----
-
-Best of luck to all participants, and happy coding!
+- Since the projects make use of some dummy values to represent ckEth and the ICP tokens, the major improvements is going to implement the ICP ledger for ICP tokens and use Sepolia testnet Eth to mint ckETH.
+- ReImplement the project with Motoko which is a more stable programming language and has a bigger community for support ans Motoko is considered more Stable than Typescript
