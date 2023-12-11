@@ -17,7 +17,7 @@ Clone this repository and navigate to the `micro_defi` directory:
 ```bash
 git clone https://github.com/sameicp/uz-hackathon-nov-2023/tree/micro-defi
 cd micro_defi
-````
+```
 
 ## Install dependencies
 
@@ -47,4 +47,6 @@ You can run the following command to interact with frontend
 npm run start
 ```
 
+
 # Link to the [YouTube video](https://youtu.be/69FpEYvmBCs)
+````
