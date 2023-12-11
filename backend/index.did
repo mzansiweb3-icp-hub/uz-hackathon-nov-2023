@@ -1,0 +1,9 @@
+service: () -> {
+    addLanguage: (record {language:text}) -> (record {id:text; language:text});
+    addMessage: (record {topic:text; language1:text; language2:text; email:text; language:text; comment:text}) -> (record {id:text; topic:text; language1:text; language2:text; email:text; language:text; comment:text});
+    addTopic: (record {topic:text}) -> (record {id:text; topic:text});
+    getLanguages: () -> (vec record {id:text; language:text}) query;
+    getMessages: () -> (vec record {id:text; topic:text; language1:text; language2:text; email:text; language:text; comment:text}) query;
+    getMessagesOnLanguage: (text) -> (opt record {id:text; topic:text; language1:text; language2:text; email:text; language:text; comment:text}) query;
+    getTopics: () -> (vec record {id:text; topic:text}) query;
+}
