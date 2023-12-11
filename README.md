@@ -10,9 +10,10 @@ After you have installed the required tools, you can move on to the next step.
 
 ## Clone the repository
 
-````bash
+```bash
 
 Clone this repository and navigate to the `micro_defi` directory:
+```
 
 ```bash
 git clone https://github.com/sameicp/uz-hackathon-nov-2023/tree/micro-defi
@@ -47,6 +48,13 @@ You can run the following command to interact with frontend
 npm run start
 ```
 
+# Link to
 
-# Link to the [YouTube video](https://youtu.be/69FpEYvmBCs)
-````
+- [YouTube video](https://youtu.be/69FpEYvmBCs)
+- [Frontend Canister](https://6dzvv-miaaa-aaaak-qcwgq-cai.icp0.io/)
+- [Backend Canister](https://a4gq6-oaaaa-aaaab-qaa4q-cai.raw.icp0.io/?id=6k26j-2aaaa-aaaak-qcwha-cai)
+
+# Improvements to be done on the project
+
+- Since the projects make use of some dummy values to represent ckEth and the ICP tokens, the major improvements is going to implement the ICP ledger for ICP tokens and use Sepolia testnet Eth to mint ckETH.
+- ReImplement the project with Motoko which is a more stable programming language and has a bigger community for support ans Motoko is considered more Stable than Typescript

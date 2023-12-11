@@ -77,7 +77,7 @@ const App = () => {
   });
 
   //Only use agent.fetchRootKey() in development mode, in production remove this line
-  agent.fetchRootKey();
+  // agent.fetchRootKey();
 
   const backendActor = Actor.createActor(idlFactory, {
     agent,
