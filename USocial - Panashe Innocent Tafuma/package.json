@@ -1,0 +1,17 @@
+{
+  "scripts": {
+    "install_dfx": "DFX_VERSION=0.14.2 sh -ci \"$(curl -fsSL https://sdk.dfinity.org/install.sh)\"",
+    "start": "dfx start --background --clean",
+    "stop": "dfx stop",
+    "local": "dfx deploy uSocial",
+    "mainnet": "dfx deploy --network ic uSocial"
+  },
+  "dependencies": {
+    "azle": "^0.18.6",
+    "uuid": "^9.0.1"
+    
+  },
+  "devDependencies": {
+    "@types/uuid": "^9.0.5"
+  }
+}
