@@ -27,12 +27,29 @@ let s_debt = StableBTreeMap<Principal, nat>(Principal, nat, 9);
 let hasDebt = StableBTreeMap<Principal, bool>(Principal, bool, 10);
 let debtTimer = StableBTreeMap<Principal, TimerId>(Principal, TimerId, 11);
 
+/**
+ * Project: Micro-Defi
+ * Developer: @sameicp
+ * Special Thanks: @iamenochchirima and @renegadec for the help offered when it comes to understading azle
+ * About the project: The projects is a DeFi market place where the users ICP tokens can stake their tokens
+ * and buy ckEth on the IC and they later have to repay the ckEth tokens before they get liquidated
+ * 
+ * N.B: Faced some dificult when trying to implement the project using ckEth from sepolia and ended up using
+ * dummy values for the tokens and the token prices. This projects shows the logic of how the tokens
+ * will be processed and I am planning to continue with the project so that I can use the Eth from
+ * testnet. Used dummy values for the price also because had some dificulty to change the blob response
+ * from Http response into the real price of the token. So I will also have to find a way to use the 
+ * price values in real time
+ * 
+ * Special thanks to: ICP Hub SA and Uz Computer Science Department for the Opportunity
+ * 
+ */
 export default Canister({
     
     /**
      * @param userId: userId assigned by Internet Identity
      * @param deposit: The amount of ICP tokens the user want to deposit
-     * 
+     * @returns amount of collateral deposited
      * This functions allows ICP holders to deposit their tokens so that
      * they can borrow ckEth tokens to do their trade
      */
@@ -41,9 +58,11 @@ export default Canister({
         if( deposit <= 0){
             throw new Error('can not deposit 0 ICP as collateral')
         }
+
         if( userId === ''){
             throw new Error('no user identity')
         }
+
         const depositWithPrecision: nat = BigInt(deposit) * BigInt(PRECISION);
         const userPrincipal: Principal = Principal.fromText(userId);
         s_collateralDeposited.insert(userPrincipal, depositWithPrecision);
@@ -54,7 +73,7 @@ export default Canister({
     /**
      * @param userId The userId of a person who want to borrow ckETH
      * @param amountToBorrow The number of ckEth tokens they want to borrow
-     * 
+     * @returns the amount the user has borrowed
      * Functions allows the users who have deposited collateral to borrow
      * ckEth
      */
@@ -62,16 +81,20 @@ export default Canister({
         if( userId === ''){
             throw new Error('no user id');
         }
+
         if(amountToBorrow <= 0n){
             throw new Error('can not borrow zero amount')
         }
+
         if(amountToBorrow > ckEthPool){
             throw new Error('user can not borrow because of lack of the token');
         }
+
         const userPrincipal: Principal = Principal.fromText(userId);
         if(hasDebt.get(userPrincipal).Some){
           throw new Error('User already on debt');
         }
+
         const amtWithPrecision = BigInt(amountToBorrow ) * BigInt(PRECISION);
         revertIfHealthFactorIsBroken(userPrincipal, amtWithPrecision);
         s_debt.insert(userPrincipal, amtWithPrecision);
@@ -86,7 +109,7 @@ export default Canister({
     /**
      * @param userId The Identity of the User
      * @param amountToLend The amount of ckEth tokens that the User want to invest
-     * 
+     * @returns ckEth tokens Staked
      * On the Platform, There will be borrowers and lenders.
      * Lenders will use the functions to lend their tokens for profit
      */
@@ -124,6 +147,7 @@ export default Canister({
       if('None' in victimDebtOpt || 'None' in victimIcpOpt){
         throw new Error('cannot liquidate a user without debt')
       }
+
       if('None' in liquidatorIcpOpt){
         throw new Error('can not liquidate a user if you do not have ICP')
       }
@@ -142,12 +166,14 @@ export default Canister({
 
       // check if the victim healthfactor is broken
       const isVictimsHFBroken: bool = isHealthFactorBroken(victimIcp, victimDebt);
+
       if(!isVictimsHFBroken){
         throw new Error('can not liquidate user with good health factor');
       }
 
       // check liquidator hf
       const isLiquidatorHfBroken: bool = isHealthFactorBroken(liquidatorIcp, liquidatorDebt);
+
       if(isLiquidatorHfBroken){
         throw new Error('can not liquidate with bad health factor');
       }
@@ -168,20 +194,27 @@ export default Canister({
       if( userId === ''){
         throw new Error('no user id');
       }
+
       if(amount <= 0){
           throw new Error('can not repay with zero amount')
       }
+
       const amtWithPrecision = BigInt(amount ) * BigInt(PRECISION);
       const userPrincipal: Principal = Principal.fromText(userId);
       const amountToPay = calcDebtWithInterest(userPrincipal);
+
       if(amtWithPrecision < amountToPay){
         throw new Error(`You are required to pay ${amountToPay / BigInt(PRECISION)}`);
       }
+
       const timerIdOpt = debtTimer.get(userPrincipal);
+
       if('None' in timerIdOpt){
           throw new Error(`Failed to fetch timerId for the user with ID: ${userPrincipal}`)
       }
+
       const timerId: TimerId = timerIdOpt.Some;
+      // clear the timer if the user has payed the debt
       ic.clearTimer(timerId);
       debtCollectionckETH += amountToPay;
       s_debt.insert(userPrincipal, 0);
@@ -241,9 +274,11 @@ export default Canister({
 
 const revertIfHealthFactorIsBroken = (userId: Principal, amt: nat)=>{
     const depositOpt = s_collateralDeposited.get(userId);
+
     if( 'None' in depositOpt){
         throw new Error('Can not find the deposits with the id');
     }
+
     const deposit: nat = depositOpt.Some;
     const healthFactor: nat = calculateHealthFactor(deposit, amt);
 
