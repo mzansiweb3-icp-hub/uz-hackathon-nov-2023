@@ -1,0 +1,26 @@
+{
+    "canisters": {
+        "datasource": {
+            "type": "custom",
+            "main": "backend/index.ts",
+            "candid": "backend/index.did",
+            "build": "npx azle datasource",
+            "wasm": ".azle/datasource/datasource.wasm",
+            "gzip": true
+        },
+        "frontend": {
+            "dependencies": ["datasource"],
+            "type": "assets",
+            "source": ["dist/"]
+          }
+    },
+    "defaults": {
+        "build": {
+          "args": "",
+          "packtool": ""
+        }
+      },
+      "output_env_file": ".env",
+      "version": 1
+}
+

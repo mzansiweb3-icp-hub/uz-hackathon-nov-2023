@@ -1,0 +1,171 @@
+.side-bar{
+    float:left;
+    height:10vh;
+    width:5vh;
+    border: rgb(177, 129, 129) solid 2px;
+    background: mintcream;
+}
+.languages{
+    background-color: blueviolet;
+    background: rgb(116, 111, 121);
+}
+.languages p{
+    margin: 20px;
+    font-size: 30;
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: bolder;
+    text-align: center;
+}
+.navBar{
+    background: paleturquoise;
+    padding:30px;
+
+}
+.navBar nav{
+    background: paleturquoise;
+    padding:30px;
+    display: inline;
+
+}
+.navBar nav li{
+    text-decoration: none;
+    text-transform: none;
+    float: right;
+    display: inline;
+    background: paleturquoise;
+    padding-left: 10px;
+    padding-right: 10px;
+    /* margin-bottom: 30px; */
+}
+p{
+    margin: 20px;
+}
+form{
+    background-color: blueviolet;
+    background: rgb(116, 111, 121);
+    width: 75vh;
+    height: 80vh;
+    border-radius: 10px;
+}
+fieldset{
+    border: 3px solid rgb(184, 86, 86);
+    width: 75vh;
+    height: 80vh;
+    margin: 20px;
+    align-self: center;
+    align-items: center;
+    margin-left: 500px;
+    border-radius: 10px;
+
+
+}
+button{
+    border-radius: 5px;
+    border: 2px solid black;
+    background-color: powderblue;
+    background: powderblue;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-left: 10px;
+    margin-right:10px;
+    padding-top:5px;
+    margin-top: 5px;
+    width:100px;
+    height: 40px;
+    font-size: large;
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: bolder;
+    margin-left: 150px;
+}
+label{
+    font-size: large;
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: bolder;
+    padding-left: 10;
+    padding-right: 10;
+    margin-left: 10px;
+    margin-right:10px;
+    padding-top:5px;
+    margin-top: 5px;
+}
+input{
+    font-size: large;
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: bolder;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-left: 10px;
+    margin-right:10px;
+    padding-top:5px;
+    margin-top: 5px;
+    padding-bottom:5px;
+    margin-bottom: 5px;
+    border: 2px solid powderblue;
+    border-radius: 5px;
+    border-bottom: 3px purple;
+    width:500px;
+}
+select{
+    font-size: large;
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: bolder;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-left: 200px;
+    margin-right:10px;
+    padding-top:5px;
+    margin-top: 5px;
+    padding-bottom:5px;
+    margin-bottom: 5px;
+    border: 2px solid powderblue;
+    border-radius: 5px;
+    border-bottom: 3px purple;
+    text-align: left;
+    width: 200px;
+}
+textarea{
+    font-size: large;
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: bolder;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-left: 10px;
+    padding-bottom:5px;
+    margin-bottom: 5px;
+    margin-right:10px;
+    padding-top:5px;
+    margin-top: 5px;
+    height:100px;
+    width:500px;
+    border: 2px solid powderblue;
+    border-radius: 5px;
+}
+h1{
+    align-self: center;
+    font-size: 30px;
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: bolder;
+    text-align:center;
+    margin: 20px;
+}
+table {
+    max-width: 100%;
+    margin-left: 500px;
+  }
+  
+tr:nth-child(odd) {
+    background-color: #eee;
+  }
+  
+th {
+    background-color: #555;
+    color: #fff;
+  }
+  
+th, td {
+    text-align: left;
+    padding: 0.5em 1em;
+  }
+  /* .table-content{
+    text-align: center;
+  } */
