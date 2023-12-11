@@ -41,6 +41,10 @@ let debtTimer = StableBTreeMap<Principal, TimerId>(Principal, TimerId, 11);
  * from Http response into the real price of the token. So I will also have to find a way to use the 
  * price values in real time
  * 
+ * the values of the tokens have 18 digits like 1 ETH = 1e18 wei (in Ethereum)
+ * this is done because since the azle supports BigInt is struggles with decimal places so
+ * we change the values to 18 degits for precision purpose
+ * 
  * Special thanks to: ICP Hub SA and Uz Computer Science Department for the Opportunity
  * 
  */
