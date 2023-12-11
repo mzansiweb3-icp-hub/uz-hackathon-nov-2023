@@ -29,7 +29,13 @@ let debtTimer = StableBTreeMap<Principal, TimerId>(Principal, TimerId, 11);
 
 export default Canister({
     
-    // depositCollateral
+    /**
+     * @param userId: userId assigned by Internet Identity
+     * @param deposit: The amount of ICP tokens the user want to deposit
+     * 
+     * This functions allows ICP holders to deposit their tokens so that
+     * they can borrow ckEth tokens to do their trade
+     */
     depositCollateral: update([text, float64], nat, (userId, deposit)=>{
         // check if collateral is more than zero
         if( deposit <= 0){
@@ -45,7 +51,13 @@ export default Canister({
         return depositWithPrecision;
     }),
 
-    // borrowTokens
+    /**
+     * @param userId The userId of a person who want to borrow ckETH
+     * @param amountToBorrow The number of ckEth tokens they want to borrow
+     * 
+     * Functions allows the users who have deposited collateral to borrow
+     * ckEth
+     */
     borrowTokens: update([text, float64], nat, async (userId, amountToBorrow)=>{
         if( userId === ''){
             throw new Error('no user id');
@@ -71,7 +83,13 @@ export default Canister({
         
     }),
 
-    // lendTokens
+    /**
+     * @param userId The Identity of the User
+     * @param amountToLend The amount of ckEth tokens that the User want to invest
+     * 
+     * On the Platform, There will be borrowers and lenders.
+     * Lenders will use the functions to lend their tokens for profit
+     */
     lendckEthToken: update([text, float64], nat,(userId, amountToLend)=>{
       if(userId ===''){
         throw new Error('no userId');
@@ -88,7 +106,12 @@ export default Canister({
       return amtToLendWithPrecison;
     }),
 
-    // liquidation (borrower);
+    /**
+     * @param liquidatorId Id for the person who want to liquidate another participant
+     * @param victimId Id of the person who is going to be LIQUIDATED
+     * 
+     * This function allows participant to liquidate others so that thave failed to pay theiry debt
+     */
     liquidation: update([text, text, float64], Void, (liquidatorId, victimId)=>{
       if( liquidatorId==='' || victimId===''){
         throw new Error('no liquidator of victim')
@@ -135,6 +158,12 @@ export default Canister({
       
     }),
 
+    /**
+     * @param userId Id of the person who wants to pay the debt
+     * @param amount the figure which the user has to reoay back
+     * 
+     * the function is used by person who has debt and needs to repay the debt with in 30 days
+     */
     repayDebt: update([text, float64], Void, (userId, amount)=>{
       if( userId === ''){
         throw new Error('no user id');
@@ -160,7 +189,10 @@ export default Canister({
 
     }),
 
-    // getHealthFactor
+    /**
+     * @param userId The id of thw user whom we want to check health factor foe
+     * checks the Helath factor of the debtor if it is good or bad.
+     */
     getHealthFactor: update([text], text, (userId)=>{
       const userPrincipal: Principal = Principal.fromText(userId);
       const userDebt: nat = s_debt.get(userPrincipal).Some;
@@ -175,32 +207,32 @@ export default Canister({
 
     }),
 
+    // the function queries the if the user has debt and return true or false
+    // depending on the debt status of the user
     getHasDebt: query([text], Opt(bool), (userId)=>{
       const userPrincipal: Principal = Principal.fromText(userId);
       return hasDebt.get(userPrincipal);
     }),
 
-    // getAccountInformation
+    // fi the user has debt then this function retrieves the debt that the user has
     getDebtInformation: query([text],Opt(nat), (userId)=>{
       const userPrincipal: Principal = Principal.fromText(userId);
       return s_debt.get(userPrincipal);
     }),
 
-    // getCollateralTokens
+    // this function retrives the collateral staked by the user so that they can borrow ckEth
     getCollateralIcpToken: query([text], Opt(nat),(userId)=>{
       const userPrincipal: Principal = Principal.fromText(userId);
       return s_collateralDeposited.get(userPrincipal);
     }),
 
-    getDepositedAmountForLending: query([text], Opt(nat),(userId)=>{
-      const userPrincipal: Principal = Principal.fromText(userId);
-      return s_lender.get(userPrincipal);
-    }), 
-
+    // returns the total amount of ckEth available for users to borrow
     getckEthPool: query([], nat, ()=>{
       return ckEthPool;
     }),
 
+    // this function retrieves the amount that the user has landed on the 
+    // platform for profit
     getAmountLanded: query([text], Opt(nat), (userId)=>{
       const userPrincipal: Principal = Principal.fromText(userId);
       return s_lender.get(userPrincipal);
@@ -220,10 +252,15 @@ const revertIfHealthFactorIsBroken = (userId: Principal, amt: nat)=>{
     }
 }
 
+// the function takes number of token and price of a single token
+// the functions multiply the two numbers to get the usd value of the tokens
 const convertTokensToUsd = (token: nat, usdPrice: nat)=>{
     return BigInt(token * usdPrice);
 }
 
+// calculates if the borrower is elligible to borrow the tokens
+// the function compares the deposit and borrowedAmt and the deposit
+// must always be greater than the value of token borrowed
 const calculateHealthFactor = (deposit: nat, borrow: nat): nat=>{
     const depositInUsd: nat = convertTokensToUsd(deposit, icpToUsd);
     const fundsToBorrowInUsd: nat = convertTokensToUsd(borrow, ethereumToUsd);
@@ -232,6 +269,8 @@ const calculateHealthFactor = (deposit: nat, borrow: nat): nat=>{
     return healthFactor;
 }
 
+// when the user id repaying the debt they are supposed to with an interest added
+// the function takes in userId as parameter
 const calcDebtWithInterest = (userId: Principal): nat => {
     const userDebtOpt = s_debt.get(userId);
     if('None' in userDebtOpt){
@@ -243,6 +282,8 @@ const calcDebtWithInterest = (userId: Principal): nat => {
     return debtToPay;
 }
 
+// the function check to see if the Health factor is broken
+// functions returns a boolean
 const isHealthFactorBroken = (icp: nat, debt: nat): boolean=>{
   const healthFactor = calculateHealthFactor(icp, debt);
   if(!debt){
@@ -254,6 +295,8 @@ const isHealthFactorBroken = (icp: nat, debt: nat): boolean=>{
   return true;
 }
 
+/// this function set the due date using the ic.setTimer function
+/// the function takes in the id and the duration period to pay the debt
 const setDueDate = (userId: Principal, period: Duration): TimerId =>{
   return ic.setTimer(period, ()=>{
       debtColletionICP += s_collateralDeposited.get(userId).Some;
