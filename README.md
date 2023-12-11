@@ -1,46 +1,16 @@
-# datasource
+video for demostration link  https://youtu.be/2gzBvAT_SwE
 
+this is platform to create datasets or files for people to use in NLP
 
-`dfx` is the tool you will use to interact with the IC locally and on mainnet. If you don't already have it installed:
+anyone is allowed to put the languages they are looking forward to collect data on
 
-```bash
-npm run dfx_install
-```
+they are also able to add topics to use to generate stories from 
 
-Next you will want to start a replica, which is a local instance of the IC that you can deploy your canisters to:
+any user can add a topic
 
-```bash
-npm run replica_start
-```
+users need to publish links for people to participate or have adds on so that it can reach every part of the world and there will as much data as possible on a particular language so that the model to be produced will have improved accuracy
 
-If you ever want to stop the replica:
+any user can dowload the text files 
 
-```bash
-npm run replica_stop
-```
+people can search for exact language they want to work on
 
-Now you can deploy your canister locally:
-
-```bash
-npm install
-npm run canister_deploy_local
-```
-
-To call the methods on your canister:
-
-```bash
-npm run canister_call_get_message
-npm run canister_call_set_message
-```
-
-If you run the above commands and then call `npm run canister_call_get_message` you should see:
-
-```bash
-("Hello world!")
-```
-
-Assuming you have [created a cycles wallet](https://internetcomputer.org/docs/current/developer-docs/quickstart/network-quickstart) and funded it with cycles, you can deploy to mainnet like this:
-
-```bash
-npm run canister_deploy_mainnet
-```
