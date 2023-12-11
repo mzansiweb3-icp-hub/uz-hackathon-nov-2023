@@ -4,7 +4,6 @@ service: () -> {
     getAmountLanded: (text) -> (opt nat) query;
     getCollateralIcpToken: (text) -> (opt nat) query;
     getDebtInformation: (text) -> (opt nat) query;
-    getDepositedAmountForLending: (text) -> (opt nat) query;
     getHasDebt: (text) -> (opt bool) query;
     getHealthFactor: (text) -> (text);
     getckEthPool: () -> (nat) query;

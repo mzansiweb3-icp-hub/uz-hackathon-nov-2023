@@ -22,9 +22,9 @@ function Dashboard({ backendActor, principal, isAuthenticated }) {
     <div className="bg-gray-900 text-white min-h-screen flex flex-col justify-center items-center">
       <h1 className="text-4xl font-bold mb-6">Dashboard</h1>
       <div className="text-center mt-12">
-        <p>Deposited: {collateral.toString()}</p>
-        <p>Borrowed: {debt.toString()}</p>
-        <p>Landed: {amtLend.toString()}</p>
+        <p>Deposited As Collateral: {collateral.toString()}</p>
+        <p>Borrowed ckETH: {debt.toString()}</p>
+        <p>Deposited For Landing: {amtLend.toString()}</p>
       </div>
       <div className="mt-8">
         <Link to="/" className="text-blue-400 hover:text-blue-600">

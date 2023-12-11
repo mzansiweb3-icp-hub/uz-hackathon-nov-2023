@@ -46,3 +46,5 @@ You can run the following command to interact with frontend
 ```bash
 npm run start
 ```
+
+# Link to the [YouTube video](https://youtu.be/69FpEYvmBCs)
