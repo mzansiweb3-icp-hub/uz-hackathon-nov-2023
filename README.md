@@ -1,9 +1,12 @@
-# royaltiesCalculator
-This project is a sophisticated royalties calculator designed to streamline and automate the distribution of royalties within the music industry. It caters to three key user roles: the artist, music user (Radio Stations), and the manager overseeing the distribution process.
+
+![Thumbnail](https://github.com/Malcom-gif/Royalties-Calculator/assets/94373433/46e949ed-2028-48c0-9414-fba307b6c815)
 
 VIDEO FOR THE PROJECT
 
 https://youtu.be/EvKYRZpIhIk
+
+# royaltiesCalculator
+This project is a sophisticated royalties calculator designed to streamline and automate the distribution of royalties within the music industry. It caters to three key user roles: the artist, music user (Radio Stations), and the manager overseeing the distribution process.
 
 Key Features:
 
