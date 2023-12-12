@@ -1,73 +1,69 @@
-# University of Zimbabwe ICP Hackathon
+# royaltiesCalculator
+This project is a sophisticated royalties calculator designed to streamline and automate the distribution of royalties within the music industry. It caters to three key user roles: the artist, music user (Radio Stations), and the manager overseeing the distribution process.
 
-Welcome to the University of Zimbabwe's Internet Computer Protocol (ICP) Hackathon! This event is dedicated to exploring the possibilities of the Internet Computer using TypeScript. Here, you will find all the resources you need to get started, learn, and create innovative projects.
+Key Features:
 
-## About the Hackathon
+    #1.Artist Module:
+        Allows artists to input details about their songs, including metadata and ownership information.
 
-This hackathon is an exciting opportunity for students to dive into the world of decentralized applications using the Internet Computer Protocol. It's a great chance to collaborate, innovate, and develop your skills in TypeScript and blockchain technology.
+    #2.Music User Module:
+        Enables music users to submit logsheets detailing the music they played and specify the radio stations involved.
 
-## Getting Started
+    #3.Matching:
+        The system intelligently matches submitted logsheets against stored songs, automating the process of associating plays with respective tracks.
 
-Before you begin, make sure you have the following prerequisites installed:
+    #4.Manager Module:
+        Empowers managers to enter the total amount to be distributed among artists and oversee the distribution process.
 
-- Node.js
-- TypeScript
-- Git
+    #6.Distribution Algorithm:
+        Utilizes a robust algorithm to distribute the allocated amount based on play counts, ensuring fair and accurate compensation for artists.
 
-## Prerequisites
+#Industry Relevance:
 
-Before diving into the hackathon, ensure you have the following prerequisites installed and set up:
+This web3 application addresses a critical need within the music industry, particularly for associations such as SAMRO in South Africa, ZIMURA in Zimbabwe, and other Collective Management Organizations (CMOs) worldwide. By automating the royalties distribution process, it enhances efficiency, reduces errors, and aligns with global standards for collecting and distributing royalties.
 
-- **Node.js**: A JavaScript runtime built on Chrome's V8 JavaScript engine. [Node.js Official Guide](https://nodejs.org/en/docs/)
-- **TypeScript**: A typed superset of JavaScript that compiles to plain JavaScript. [TypeScript Documentation](https://www.typescriptlang.org/docs/)
-- **Git**: A distributed version control system to track changes in source code during software development. [Git Basics](https://git-scm.com/book/en/v2/Getting-Started-Git-Basics)
-- **Internet Computer Protocol (ICP) SDK**: Essential tools and libraries for developing on the Internet Computer. Make sure to download and install the SDK to develop and deploy your applications. [ICP SDK Installation Guide](https://sdk.dfinity.org/docs/developers-guide/install-upgrade-remove.html)
+Welcome to your first Azle project! This example project will help you to deploy your first canister (application) to the Internet Computer (IC) decentralized cloud. It is a simple getter/setter canister. You can always refer to [The Azle Book](https://demergent-labs.github.io/azle/) for more in-depth documentation.
 
-It's important to familiarize yourself with these tools as they form the backbone of your development environment for this hackathon.
+`dfx` is the tool you will use to interact with the IC locally and on mainnet. If you don't already have it installed:
 
+```bash
+npm run dfx_install
+```
 
-## Workshop Resources
+Next you will want to start a replica, which is a local instance of the IC that you can deploy your canisters to:
 
-We've organized several workshops to help you get up to speed with ICP and TypeScript. Here are some materials from those sessions:
+```bash
+npm run replica_start
+```
 
-1. Introduction to Internet Computer Protocol
-2. Building Decentralized Applications with TypeScript
-3. Advanced ICP Techniques
+If you ever want to stop the replica:
 
-(Links to workshop materials and recordings)
+```bash
+npm run replica_stop
+```
 
-## Project Submission Guidelines
+Now you can deploy your canister locally:
 
-To participate in the hackathon, follow these steps:
+```bash
+npm install
+npm run canister_deploy_local
+```
 
-1. Form a team of 3-5 members.
-2. Fork this repository.
-3. Develop your project in your team's fork.
-4. Submit your project by creating a pull request to this repository before the deadline.
+To call the methods on your canister:
 
-Detailed submission instructions are available [here](#).
+```bash
+npm run canister_call_get_message
+npm run canister_call_set_message
+```
 
-## Judging Criteria
+If you run the above commands and then call `npm run canister_call_get_message` you should see:
 
-Projects will be judged based on the following criteria:
+```bash
+("Hello world!")
+```
 
-- Innovation and originality
-- Technical complexity
-- Utility and practicality
-- Presentation and documentation
+Assuming you have [created a cycles wallet](https://internetcomputer.org/docs/current/developer-docs/quickstart/network-quickstart) and funded it with cycles, you can deploy to mainnet like this:
 
-## Prizes
-
-Exciting prizes await the winners! Stay tuned for more details.
-
-## Code of Conduct
-
-We are committed to providing a welcoming and harassment-free experience for everyone.
-
-## Support and Community
-
-Got questions? Join our community chat on [Discord](https://discord.com/invite/WtPzY28q) or [Telegram](https://t.me/+yGSEEcANCkQ3MTY8).
-
----
-
-Best of luck to all participants, and happy coding!
+```bash
+npm run canister_deploy_mainnet
+```
