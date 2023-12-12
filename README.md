@@ -1,6 +1,10 @@
 # royaltiesCalculator
 This project is a sophisticated royalties calculator designed to streamline and automate the distribution of royalties within the music industry. It caters to three key user roles: the artist, music user (Radio Stations), and the manager overseeing the distribution process.
 
+VIDEO FOR THE PROJECT
+
+https://youtu.be/EvKYRZpIhIk
+
 Key Features:
 
     #1.Artist Module:
