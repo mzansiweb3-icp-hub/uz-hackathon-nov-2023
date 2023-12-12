@@ -12,15 +12,23 @@ Key Features:
 
     #1.Artist Module:
         Allows artists to input details about their songs, including metadata and ownership information.
+![1](https://github.com/Malcom-gif/Royalties-Calculator/assets/94373433/6a0b3af4-e173-4452-880f-1d65d5def316)
 
+        
     #2.Music User Module:
         Enables music users to submit logsheets detailing the music they played and specify the radio stations involved.
+![2](https://github.com/Malcom-gif/Royalties-Calculator/assets/94373433/1891915e-c393-4d07-b79d-796f6bae5f1c)
+
+        
 
     #3.Matching:
         The system intelligently matches submitted logsheets against stored songs, automating the process of associating plays with respective tracks.
 
     #4.Manager Module:
         Empowers managers to enter the total amount to be distributed among artists and oversee the distribution process.
+
+![Blue Modern Transport Login Page Wireframe Tablet UI Prototype](https://github.com/Malcom-gif/Royalties-Calculator/assets/94373433/2567df6f-4d87-4977-9c82-dfe0ec2b6c7d)
+  
 
     #6.Distribution Algorithm:
         Utilizes a robust algorithm to distribute the allocated amount based on play counts, ensuring fair and accurate compensation for artists.
