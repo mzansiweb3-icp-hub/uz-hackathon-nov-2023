@@ -45,5 +45,17 @@ Error stopping all services
 - billing
 - asset
 - profile create and update
+- user authentication
+- accept and cancel loans
 
 ## Link to youtube video
+
+- https://www.youtube.com/watch?v=EgcvUMyMfZo
+
+## Link to cannister
+
+- flash-loan: http://127.0.0.1:4943/?canisterId=bd3sg-teaaa-aaaaa-qaaba-cai&id=bkyz2-fmaaa-aaaaa-qaaaq-cai
+
+## link to Candid Ui
+
+-
