@@ -1,6 +1,11 @@
 import { Principal, Record, Vec, text } from "azle";
 import { nat64 } from "azle";
 
+export abstract class CommentConstants {
+  public static readonly MAX_COMMENT_LENGTH = 400 as const;
+  public static readonly MIN_COMMENT_LENGTH = 1 as const;
+}
+
 export const Comment = Record({
   postId: text,
   content: text,

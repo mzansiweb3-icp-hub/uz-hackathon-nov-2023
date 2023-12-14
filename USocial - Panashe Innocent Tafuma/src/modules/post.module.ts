@@ -1,6 +1,11 @@
 import { Opt, Record, Vec, int32, nat64, text } from "azle";
 import { Principal } from "azle";
 
+export abstract class PostConstants {
+  public static readonly MAX_CAPTION_LENGTH = 400 as const;
+  public static readonly MIN_CAPTION_LENGTH = 1 as const;
+}
+
 export const Post = Record({
   id: text,
   createdAt: nat64,

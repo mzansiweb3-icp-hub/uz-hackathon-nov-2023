@@ -1,9 +1,4 @@
-import { PartialPost, Post, UpdatePostDto } from "../modules";
-
-export abstract class PostConstants {
-  public static readonly MAX_CAPTION_LENGTH = 400 as const;
-  public static readonly MIN_CAPTION_LENGTH = 1 as const;
-}
+import { PartialPost, Post, PostConstants, UpdatePostDto } from "../modules";
 
 export function validateCaption(caption: string): asserts caption is string {
   if (typeof caption !== "string") {

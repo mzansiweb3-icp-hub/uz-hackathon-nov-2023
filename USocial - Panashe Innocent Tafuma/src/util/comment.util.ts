@@ -1,10 +1,5 @@
-import { CreateCommentDto } from "../modules";
+import { CommentConstants, CreateCommentDto } from "../modules";
 import validateUUID from "./canister.util";
-
-abstract class CommentConstants {
-  public static readonly MAX_COMMENT_LENGTH = 400 as const;
-  public static readonly MIN_COMMENT_LENGTH = 1 as const;
-}
 
 export function validateCommentContent(
   content: unknown
