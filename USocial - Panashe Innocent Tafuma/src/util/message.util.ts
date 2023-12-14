@@ -1,15 +1,11 @@
 import {
   CreateMessageDto,
   Message,
+  MessageConstants,
   PartialMessage,
   UpdateMessageDto,
 } from "../modules";
 import validateUUID from "./canister.util";
-
-abstract class MessageContent {
-  public static readonly MAX_CONTENT_LENGTH = 800 as const;
-  public static readonly MIN_CONTENT_LENGTH = 1 as const;
-}
 
 export function validateContent(content: string): asserts content is string {
   if (typeof content !== "string") {
@@ -17,11 +13,11 @@ export function validateContent(content: string): asserts content is string {
   }
 
   if (
-    content.length > MessageContent.MAX_CONTENT_LENGTH ||
-    content.length < MessageContent.MIN_CONTENT_LENGTH
+    content.length > MessageConstants.MAX_CONTENT_LENGTH ||
+    content.length < MessageConstants.MIN_CONTENT_LENGTH
   ) {
     throw new Error(
-      `Content must be between ${MessageContent.MIN_CONTENT_LENGTH} and ${MessageContent.MAX_CONTENT_LENGTH} characters long`
+      `Content must be between ${MessageConstants.MIN_CONTENT_LENGTH} and ${MessageConstants.MAX_CONTENT_LENGTH} characters long`
     );
   }
 }
@@ -46,4 +42,21 @@ export function sanitiseUpdateMessageDto(
   return {
     content,
   };
+}
+
+export function assertUserCanDeleteMessage(message: Message): void {
+  const createdAtInMilliseconds = Number(message?.createdAt);
+
+  if (!createdAtInMilliseconds) {
+    return;
+  }
+
+  const currentTimeInMilliseconds = new Date().getTime();
+
+  if (
+    createdAtInMilliseconds + MessageConstants.MAX_DELETE_MESSAGE_TOLERANCE <
+    currentTimeInMilliseconds
+  ) {
+    throw new Error("Message can no longer be deleted");
+  }
 }

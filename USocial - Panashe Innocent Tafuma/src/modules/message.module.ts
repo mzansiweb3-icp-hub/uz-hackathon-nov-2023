@@ -3,6 +3,12 @@ import { text } from "azle";
 import { nat64 } from "azle";
 import { Principal } from "azle";
 
+export abstract class MessageConstants {
+  public static readonly MAX_CONTENT_LENGTH = 800 as const;
+  public static readonly MIN_CONTENT_LENGTH = 1 as const;
+  public static readonly MAX_DELETE_MESSAGE_TOLERANCE = 3_600_000 as const; //1hr in milliseconds
+}
+
 export const Message = Record({
   id: text,
   createdAt: nat64,

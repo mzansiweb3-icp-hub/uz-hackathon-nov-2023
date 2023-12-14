@@ -52,6 +52,7 @@ import { sanitiseCreateCommentDto } from "./util/comment.util";
 import validateUUID, { validateUnixDate } from "./util/canister.util";
 import sanitiseCreateConversationDto from "./util/conversation.util";
 import sanitiseCreateMessageDto, {
+  assertUserCanDeleteMessage,
   sanitiseUpdateMessageDto,
 } from "./util/message.util";
 
@@ -1098,6 +1099,8 @@ export default Canister({
         if (message.userId !== user.id) {
           throw new UnauthorizedException();
         }
+
+        assertUserCanDeleteMessage(message);
 
         MESSAGE_STORAGE.remove(message.id);
 
