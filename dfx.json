@@ -1,0 +1,36 @@
+{
+    "canisters": {
+        "royaltiesCalculator": {
+            "type": "custom",
+            "main": "backend/index.ts",
+            "candid": "backend/index.did",
+            "build": "npx azle royaltiesCalculator",
+            "wasm": ".azle/royaltiesCalculator/royaltiesCalculator.wasm",
+            "gzip": true
+        },
+        "frontend": {
+          "dependencies": ["royaltiesCalculator"],
+          "type": "assets",
+          "source": ["dist/"]
+        },
+        "internet_identity": {
+          "type": "custom",
+          "candid": "https://github.com/dfinity/internet-identity/releases/latest/download/internet_identity.did",
+          "wasm": "https://github.com/dfinity/internet-identity/releases/latest/download/internet_identity_dev.wasm.gz",
+          "remote": {
+            "id": {
+              "ic": "rdmx6-jaaaa-aaaaa-aaadq-cai"
+            }
+          },
+          "frontend": {}
+        }
+      },
+      "defaults": {
+        "build": {
+          "args": "",
+          "packtool": ""
+        }
+      },
+      "output_env_file": ".env",
+      "version": 1
+    }
