@@ -1,0 +1,12 @@
+{
+  "canisters": {
+    "uSocial": {
+      "type": "custom",
+      "main": "src/index.ts",
+      "build": "npx azle uSocial",
+      "candid": "src/index.did",
+      "wasm": ".azle/uSocial/uSocial.wasm",
+      "gzip": true
+    }
+  }
+}
