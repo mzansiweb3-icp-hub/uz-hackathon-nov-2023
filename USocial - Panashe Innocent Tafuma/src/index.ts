@@ -1195,7 +1195,7 @@ export default Canister({
     Result(Message, RequestError),
     (userId: string, model: UpdateMessageDto) => {
       try {
-        validate(userId);
+        validateUUIDv4(userId);
 
         if (!model.messageId || typeof model.messageId !== "string") {
           throw new Error("Invalid message update payload");
