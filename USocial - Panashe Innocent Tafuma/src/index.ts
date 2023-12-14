@@ -430,7 +430,7 @@ export default Canister({
       const post = retrievePostByIDOrFail(id);
 
       if (post.createdBy.toString() === ic.caller().toString()) {
-        throw new Error("Unathorized");
+        throw new UnauthorizedException();
       }
 
       POST_STORAGE.remove(id);
@@ -1051,14 +1051,14 @@ export default Canister({
         ];
 
         if (user.createdBy.toString() !== ic.caller.toString()) {
-          throw new Error("Unuathorized");
+          throw new UnauthorizedException();
         }
 
         if (
           conversation.sourceId !== user.id ||
           conversation.targetId !== user.id
         ) {
-          throw new Error("Unathorized");
+          throw new UnauthorizedException();
         }
 
         const message: Message = {
