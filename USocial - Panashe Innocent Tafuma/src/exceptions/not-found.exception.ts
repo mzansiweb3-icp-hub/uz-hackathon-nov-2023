@@ -1,8 +1,8 @@
-export class NotFoundError extends Error {
+export class NotFoundException extends Error {
   constructor(message: string | undefined) {
     super(message);
 
-    Object.setPrototypeOf(this, NotFoundError.prototype);
+    Object.setPrototypeOf(this, NotFoundException.prototype);
     this.name = "NotFoundError";
   }
 }

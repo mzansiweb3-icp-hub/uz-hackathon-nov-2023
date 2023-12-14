@@ -34,8 +34,9 @@ import {
   User,
 } from "./modules";
 import {
-  InternalCanisterError,
-  NotFoundError,
+  BadRequestException,
+  InternalCanisterException,
+  NotFoundException,
   RequestError,
   UnauthorizedException,
 } from "./exceptions";
@@ -91,7 +92,7 @@ function retrieveUserByIDOrFail(id: string): User {
   const user = USER_STORAGE.get(id) as Opt<TypeMapping<User>>;
 
   if (!user?.Some) {
-    throw new NotFoundError(`User with id = ${id} not found`);
+    throw new NotFoundException(`User with id = ${id} not found`);
   }
 
   return user.Some;
@@ -101,7 +102,7 @@ function retrievePostByIDOrFail(id: string): Post {
   const post = POST_STORAGE.get(id) as Opt<TypeMapping<Post>>;
 
   if (!post?.Some) {
-    throw new NotFoundError(`Post with id = ${id} not found`);
+    throw new NotFoundException(`Post with id = ${id} not found`);
   }
 
   return post.Some;
@@ -111,7 +112,7 @@ function retrieveFriendByIDOrFail(id: string): Friend {
   const friend = FRIEND_STORAGE.get(id) as Opt<TypeMapping<Friend>>;
 
   if (!friend?.Some) {
-    throw new NotFoundError(`Friendship entity with id = ${id} not found`);
+    throw new NotFoundException(`Friendship entity with id = ${id} not found`);
   }
 
   return friend.Some;
@@ -121,7 +122,7 @@ function retrieveCommentByIDOrFail(id: string): Comment {
   const comment = COMMENT_STORAGE.get(id) as Opt<TypeMapping<Comment>>;
 
   if (!comment?.Some) {
-    throw new NotFoundError(`Comment entity with id = ${id} not found`);
+    throw new NotFoundException(`Comment entity with id = ${id} not found`);
   }
 
   return comment.Some;
@@ -133,7 +134,7 @@ function retrieveConverationByIDOrFail(id: string): Conversation {
   >;
 
   if (!conversation.Some) {
-    throw new NotFoundError(`Converation entity with id = ${id} not found`);
+    throw new NotFoundException(`Converation entity with id = ${id} not found`);
   }
 
   return conversation.Some;
@@ -143,7 +144,7 @@ function retrieveMessageByIDOrFail(id: string): Message {
   const message = MESSAGE_STORAGE.get(id) as Opt<TypeMapping<Message>>;
 
   if (!message.Some) {
-    throw new NotFoundError(`Message entity with id = ${id} not found`);
+    throw new NotFoundException(`Message entity with id = ${id} not found`);
   }
 
   return message.Some;
@@ -183,7 +184,7 @@ function generateUniqueID(storageType: StorageQueryType): string {
   }
 
   if (!STORAGE) {
-    throw new InternalCanisterError(`Storage Unavialable`);
+    throw new InternalCanisterException(`Storage Unavialable`);
   }
 
   if (!STORAGE.length) {
@@ -209,7 +210,7 @@ function assertUserIsUnique(model: CreateUserDto): void {
   );
 
   if (isUser) {
-    throw new Error("User already exists");
+    throw new BadRequestException("User already exists");
   }
 }
 
@@ -314,7 +315,7 @@ export default Canister({
         const user = retrieveUsers().find((user) => user.email === email);
 
         if (!user) {
-          throw new Error(`User with email = ${email} not found`);
+          throw new NotFoundException(`User with email = ${email} not found`);
         }
 
         return Ok(User);
@@ -333,7 +334,7 @@ export default Canister({
         const user = retrieveUsers().find((user) => user.mobile === mobile);
 
         if (!user) {
-          throw new Error(`User with mobile = ${mobile} not found`);
+          throw new NotFoundException(`User with mobile = ${mobile} not found`);
         }
 
         return Ok(User);
@@ -475,7 +476,7 @@ export default Canister({
         );
 
         if (!posts.length) {
-          throw new Error(
+          throw new NotFoundException(
             "No posts were retrieved within the specified date range"
           );
         }
@@ -570,7 +571,7 @@ export default Canister({
         }
 
         if (!post.likes.find((id) => id === userId)) {
-          throw new Error("Aborting operation, you have not liked this post");
+          throw new BadRequestException("Aborting operation, you have not liked this post");
         }
 
         const updatedPost: Post = {
@@ -612,7 +613,7 @@ export default Canister({
         );
 
         if (isFriendshipRequest) {
-          throw new Error("Friendship request already exists");
+          throw new BadRequestException("Friendship request already exists");
         }
 
         const friend: Friend = {
@@ -853,11 +854,11 @@ export default Canister({
         validateUUID(postId);
 
         if (typeof offset !== "number" || offset < 0) {
-          throw new Error(`Invalid offset number: ${offset}`);
+          throw new BadRequestException(`Invalid offset number: ${offset}`);
         }
 
         if (typeof limit !== "number" || limit < 0) {
-          throw new Error(`Invalid limit number: ${limit}`);
+          throw new BadRequestException(`Invalid limit number: ${limit}`);
         }
 
         const post = retrievePostByIDOrFail(postId);
@@ -928,7 +929,7 @@ export default Canister({
         }
 
         if (!comment.likes.find((id) => id === userId)) {
-          throw new Error(
+          throw new BadRequestException(
             "Aborting operation, you have not liked this comment"
           );
         }
@@ -1191,7 +1192,7 @@ export default Canister({
         validateUUID(userId);
 
         if (!model.messageId || typeof model.messageId !== "string") {
-          throw new Error("Invalid message update payload");
+          throw new BadRequestException("Invalid message update payload");
         }
 
         const [user, message] = [
