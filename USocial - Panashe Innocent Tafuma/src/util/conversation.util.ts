@@ -1,5 +1,5 @@
 import { CreateConversationDto } from "./../modules/conversation.module";
-import validateUUIDv4 from "./canister.util";
+import validateUUID from "./canister.util";
 
 export default function sanitiseCreateConversationDto(
   model: CreateConversationDto
@@ -8,6 +8,5 @@ export default function sanitiseCreateConversationDto(
     throw new Error("Invalid CreateConversationDto payload");
   }
 
-  validateUUIDv4(model.sourceId);
-  validateUUIDv4(model.targetId);
+  validateUUID(model.sourceId, model.targetId);
 }

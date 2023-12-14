@@ -1,5 +1,5 @@
 import { CreateCommentDto } from "../modules";
-import validateUUIDv4 from "./canister.util";
+import validateUUID from "./canister.util";
 
 abstract class CommentConstants {
   public static readonly MAX_COMMENT_LENGTH = 400 as const;
@@ -34,6 +34,5 @@ export function sanitiseCreateCommentDto(model: CreateCommentDto): void {
     throw new Error("Missing post or user id");
   }
 
-  validateUUIDv4(model.postId);
-  validateUUIDv4(model.userId);
+  validateUUID(model.postId, model.userId);
 }

@@ -1,16 +1,22 @@
 abstract class CanisterUtil {
-  public static readonly UUID4_REGEXP =
-    /^[0-9A-F]{8}-[0-9A-F]{4}-[4][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i;
+  public static readonly UUID_REGEXP =
+    /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/i;
 }
 
-export default function validateUUIDv4(uuid: unknown): asserts uuid is string {
-  if (!uuid || typeof uuid !== "string") {
-    throw new Error("Invalid UUID");
+export default function validateUUID(...arg: Array<unknown>): void {
+  function validate(arg: string): boolean {
+    return CanisterUtil.UUID_REGEXP.test(arg);
   }
 
-  if (!CanisterUtil.UUID4_REGEXP.test(uuid)) {
-    throw new Error("UUID Assertion failed");
-  }
+  arg.forEach((uuid) => {
+    if (!uuid || typeof uuid !== "string") {
+      throw new Error(`Invalid UUID: ${uuid}`);
+    }
+
+    if (!validate(uuid)) {
+      throw new Error(`UUID Assertion failed for ${uuid}`);
+    }
+  });
 }
 
 export function validateBoolean(

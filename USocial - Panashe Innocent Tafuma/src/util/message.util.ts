@@ -4,7 +4,7 @@ import {
   PartialMessage,
   UpdateMessageDto,
 } from "../modules";
-import validateUUIDv4 from "./canister.util";
+import validateUUID from "./canister.util";
 
 abstract class MessageContent {
   public static readonly MAX_CONTENT_LENGTH = 800 as const;
@@ -30,8 +30,7 @@ export default function sanitiseCreateMessageDto(
   model: CreateMessageDto
 ): asserts model is CreateMessageDto {
   validateContent(model.content);
-  validateUUIDv4(model.conversationId);
-  validateUUIDv4(model.userId);
+  validateUUID(model.conversationId, model.userId);
 }
 
 export function sanitiseUpdateMessageDto(

@@ -5,19 +5,16 @@ import {
   nat64,
   ic,
   Opt,
-  Principal,
   text,
   Canister,
   query,
   update,
-  None,
   Ok,
   Err,
   int8,
-  Some,
   TypeMapping,
 } from "azle";
-import { v4 as uuidv4, validate } from "uuid";
+import { v4 as uuidv4 } from "uuid";
 import {
   AcceptFriendRequestDto,
   Comment,
@@ -52,7 +49,7 @@ import {
 } from "./util";
 import { sanitisePostUpdate } from "./util/post.util";
 import { sanitiseCreateCommentDto } from "./util/comment.util";
-import validateUUIDv4, { validateUnixDate } from "./util/canister.util";
+import validateUUID, { validateUnixDate } from "./util/canister.util";
 import sanitiseCreateConversationDto from "./util/conversation.util";
 import sanitiseCreateMessageDto, {
   sanitiseUpdateMessageDto,
@@ -246,7 +243,7 @@ export default Canister({
   ),
   deleteUser: update([text], Result(text, RequestError), (id: string) => {
     try {
-      validateUUIDv4(id);
+      validateUUID(id);
       const user = retrieveUserByIDOrFail(id);
 
       if (user.createdBy.toString() !== ic.caller().toString()) {
@@ -372,7 +369,7 @@ export default Canister({
     Result(User, RequestError),
     (id: string, model: UpdateUserDto) => {
       try {
-        validateUUIDv4(id);
+        validateUUID(id);
         const user = retrieveUserByIDOrFail(id);
 
         if (user.createdBy.toString() !== ic.caller().toString()) {
@@ -428,7 +425,7 @@ export default Canister({
   ),
   deletePost: update([text], Result(text, RequestError), (id: string) => {
     try {
-      validateUUIDv4(id);
+      validateUUID(id);
       const post = retrievePostByIDOrFail(id);
 
       if (post.createdBy.toString() === ic.caller().toString()) {
@@ -446,7 +443,7 @@ export default Canister({
   }),
   findPostByID: query([text], Result(Post, RequestError), (id: string) => {
     try {
-      validateUUIDv4(id);
+      validateUUID(id);
       return Ok(retrievePostByIDOrFail(id));
     } catch (error) {
       return Err({
@@ -495,7 +492,7 @@ export default Canister({
     Result(Post, RequestError),
     (id: string, model: UpdatePostDto) => {
       try {
-        validateUUIDv4(id);
+        validateUUID(id);
 
         const post = retrievePostByIDOrFail(id);
 
@@ -523,8 +520,7 @@ export default Canister({
     Result(text, RequestError),
     (userId: string, postId: string) => {
       try {
-        validateUUIDv4(userId);
-        validateUUIDv4(postId);
+        validateUUID(userId, postId);
 
         const [post, user] = [
           retrievePostByIDOrFail(postId),
@@ -561,8 +557,7 @@ export default Canister({
     Result(text, RequestError),
     (userId: string, postId: string) => {
       try {
-        validateUUIDv4(userId);
-        validateUUIDv4(postId);
+        validateUUID(userId, postId);
 
         const [post, user] = [
           retrievePostByIDOrFail(postId),
@@ -672,8 +667,7 @@ export default Canister({
     Result(text, RequestError),
     (id: string, userId: string) => {
       try {
-        validateUUIDv4(id);
-        validateUUIDv4(userId);
+        validateUUID(id, userId);
 
         const friend = retrieveFriendByIDOrFail(id);
 
@@ -723,7 +717,7 @@ export default Canister({
     Result(Vec(Friend), RequestError),
     (userId: string) => {
       try {
-        validateUUIDv4(userId);
+        validateUUID(userId);
 
         const friends = retrieveFriends().filter(
           (friend) => friend.sourceId === userId || friend.targetId === userId
@@ -779,8 +773,7 @@ export default Canister({
     Result(text, RequestError),
     (commentId: string, userId: string) => {
       try {
-        validateUUIDv4(commentId);
-        validateUUIDv4(userId);
+        validateUUID(commentId, userId);
 
         const [user, comment] = [
           retrieveUserByIDOrFail(userId),
@@ -810,7 +803,7 @@ export default Canister({
     Result(Vec(Comment), RequestError),
     (postId: string) => {
       try {
-        validateUUIDv4(postId);
+        validateUUID(postId);
         const post = retrievePostByIDOrFail(postId);
 
         return Ok(
@@ -856,7 +849,7 @@ export default Canister({
     Result(Vec(Comment), RequestError),
     (postId: string, offset: number, limit: number) => {
       try {
-        validateUUIDv4(postId);
+        validateUUID(postId);
 
         if (typeof offset !== "number" || offset < 0) {
           throw new Error(`Invalid offset number: ${offset}`);
@@ -885,8 +878,7 @@ export default Canister({
     Result(text, RequestError),
     (userId: string, commentId: string) => {
       try {
-        validateUUIDv4(userId);
-        validateUUIDv4(commentId);
+        validateUUID(userId, commentId);
 
         const [comment, user] = [
           retrieveCommentByIDOrFail(commentId),
@@ -923,8 +915,7 @@ export default Canister({
     Result(text, RequestError),
     (userId: string, commentId: string) => {
       try {
-        validateUUIDv4(userId);
-        validateUUIDv4(commentId);
+        validateUUID(userId, commentId);
 
         const [comment, user] = [
           retrieveCommentByIDOrFail(commentId),
@@ -962,8 +953,7 @@ export default Canister({
     Result(Conversation, RequestError),
     (id: string, userId: string) => {
       try {
-        validateUUIDv4(id);
-        validateUUIDv4(userId);
+        validateUUID(id, userId);
 
         const conversation = retrieveConverationByIDOrFail(id);
         const user = retrieveUserByIDOrFail(userId);
@@ -1094,8 +1084,7 @@ export default Canister({
     Result(text, RequestError),
     (userId: string, messageId: string) => {
       try {
-        validateUUIDv4(userId);
-        validateUUIDv4(messageId);
+        validateUUID(userId, messageId);
 
         const [user, message] = [
           retrieveUserByIDOrFail(userId),
@@ -1125,8 +1114,7 @@ export default Canister({
     Result(Vec(Message), RequestError),
     (conversationId: string, userId: string) => {
       try {
-        validateUUIDv4(conversationId);
-        validateUUIDv4(userId);
+        validateUUID(conversationId, userId);
 
         const [conversation, user] = [
           retrieveConverationByIDOrFail(conversationId),
@@ -1162,8 +1150,7 @@ export default Canister({
     Result(Message, RequestError),
     (messageId: string, userId: string) => {
       try {
-        validateUUIDv4(messageId);
-        validateUUIDv4(userId);
+        validateUUID(messageId, userId);
 
         const [message, user] = [
           retrieveMessageByIDOrFail(messageId),
@@ -1198,7 +1185,7 @@ export default Canister({
     Result(Message, RequestError),
     (userId: string, model: UpdateMessageDto) => {
       try {
-        validateUUIDv4(userId);
+        validateUUID(userId);
 
         if (!model.messageId || typeof model.messageId !== "string") {
           throw new Error("Invalid message update payload");
