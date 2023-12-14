@@ -15,6 +15,7 @@ import {
   Err,
   int8,
   Some,
+  TypeMapping,
 } from "azle";
 import { v4 as uuidv4, validate } from "uuid";
 import {
@@ -89,63 +90,65 @@ function retrieveMessages(): Array<Message> {
 }
 
 function retrieveUserByIDOrFail(id: string): User {
-  const user = USER_STORAGE.get(id) as User | undefined;
+  const user = USER_STORAGE.get(id) as Opt<TypeMapping<User>>;
 
-  if (!user) {
+  if (!user?.Some) {
     throw new NotFoundError(`User with id = ${id} not found`);
   }
 
-  return user;
+  return user.Some;
 }
 
 function retrievePostByIDOrFail(id: string): Post {
-  const post = POST_STORAGE.get(id) as Post | undefined;
+  const post = POST_STORAGE.get(id) as Opt<TypeMapping<Post>>;
 
-  if (!post) {
+  if (!post?.Some) {
     throw new NotFoundError(`Post with id = ${id} not found`);
   }
 
-  return post;
+  return post.Some;
 }
 
 function retrieveFriendByIDOrFail(id: string): Friend {
-  const friend = FRIEND_STORAGE.get(id) as Friend | undefined;
+  const friend = FRIEND_STORAGE.get(id) as Opt<TypeMapping<Friend>>;
 
-  if (!friend) {
+  if (!friend?.Some) {
     throw new NotFoundError(`Friendship entity with id = ${id} not found`);
   }
 
-  return friend;
+  return friend.Some;
 }
 
 function retrieveCommentByIDOrFail(id: string): Comment {
-  const comment = COMMENT_STORAGE.get(id) as Comment | undefined;
+  const comment = COMMENT_STORAGE.get(id) as Opt<TypeMapping<Comment>>;
 
-  if (!comment) {
+  if (!comment?.Some) {
     throw new NotFoundError(`Comment entity with id = ${id} not found`);
   }
 
-  return comment;
+  return comment.Some;
 }
 
 function retrieveConverationByIDOrFail(id: string): Conversation {
-  const conversation = CONVERSATION_STORAGE.get(id) as Conversation | undefined;
+  const conversation = CONVERSATION_STORAGE.get(id) as Opt<
+    TypeMapping<Conversation>
+  >;
 
-  if (!conversation) {
+  if (!conversation.Some) {
     throw new NotFoundError(`Converation entity with id = ${id} not found`);
   }
 
-  return conversation;
+  return conversation.Some;
 }
 
 function retrieveMessageByIDOrFail(id: string): Message {
-  const message = MESSAGE_STORAGE.get(id) as Message | undefined;
+  const message = MESSAGE_STORAGE.get(id) as Opt<TypeMapping<Message>>;
 
-  if (!message) {
+  if (!message.Some) {
     throw new NotFoundError(`Message entity with id = ${id} not found`);
   }
 
-  return message;
+  return message.Some;
 }
 
 type StorageType = User | Post | Friend | Comment | Conversation | Message;
