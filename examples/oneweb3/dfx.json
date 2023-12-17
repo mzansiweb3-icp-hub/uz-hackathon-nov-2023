@@ -1,0 +1,37 @@
+{
+    "canisters": {
+
+      "oneweb3": {
+        "type": "custom",
+        "main": "backend/index.ts",
+        "candid": "backend/index.did",
+        "build": "npx azle oneweb3",
+        "wasm": ".azle/oneweb3/oneweb3.wasm",
+        "gzip": true
+      },
+
+      "oneweb3_frontend": {
+       
+        "frontend": {
+          "entrypoint": "public/index.html"
+        },
+        "source": [
+          
+          "build/"
+         
+        ],
+        "type": "assets",
+        "gzip": true
+      }
+
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
+
+}
