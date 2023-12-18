@@ -27,7 +27,7 @@ After you have installed the required tools, you can move on to the next step.
 1. **Clone the repository:**
    ```bash
    https://github.com/Nimakra/uz-hackathon-nov-2023.git
-   cd examples/oneweb3
+   cd oneweb3
 
 2. **Install dependencies:**
    ```bash
