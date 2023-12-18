@@ -1,0 +1,17 @@
+service: () -> {
+    createCommunity: (text, text, vec record {"principal":principal; username:text; profileImage:vec nat8}) -> (variant {Ok:record {id:principal; members:vec record {"principal":principal; username:text; profileImage:vec nat8}; name:text; description:text}; Err:text});
+    createCourse: (text, text) -> (variant {Ok:record {id:principal; title:text; description:text}; Err:text});
+    createNewsArticle: (text, text, vec nat8, text, text) -> (variant {Ok:record {id:principal; title:text; content:text; date:text; author:text; image:vec nat8}; Err:text});
+    deleteCourse: (text) -> (variant {Ok:record {id:principal; title:text; description:text}; Err:text});
+    deleteNewsArticle: (text, text) -> (variant {Ok:record {id:principal; title:text; content:text; date:text; author:text; image:vec nat8}; Err:text});
+    getCommunityByID: (text) -> (variant {Ok:record {id:principal; members:vec record {"principal":principal; username:text; profileImage:vec nat8}; name:text; description:text}; Err:text}) query;
+    getCommunityMembers: (text) -> (vec record {"principal":principal; username:text; profileImage:vec nat8}) query;
+    getCourseById: (text) -> (variant {Ok:record {id:principal; title:text; description:text}; Err:text}) query;
+    getNewsArticleById: (text, text) -> (variant {Ok:record {id:principal; title:text; content:text; date:text; author:text; image:vec nat8}; Err:text}) query;
+    joinCommunity: (text, text, principal) -> (variant {Ok:record {id:principal; members:vec record {"principal":principal; username:text; profileImage:vec nat8}; name:text; description:text}; Err:text});
+    leaveCommunity: (text, principal) -> (variant {Ok:record {id:principal; members:vec record {"principal":principal; username:text; profileImage:vec nat8}; name:text; description:text}; Err:text});
+    listCourses: () -> (variant {Ok:vec record {id:principal; title:text; description:text}; Err:text}) query;
+    listNewsArticles: () -> (variant {Ok:vec record {id:principal; title:text; content:text; date:text; author:text; image:vec nat8}; Err:text}) query;
+    updateCourse: (text, text) -> (variant {Ok:record {id:principal; title:text; description:text}; Err:text});
+    updateNewsArticle: (text, text, vec nat8, text, text) -> (variant {Ok:record {id:principal; title:text; content:text; date:text; author:text; image:vec nat8}; Err:text});
+}
