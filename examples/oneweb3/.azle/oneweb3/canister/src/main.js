@@ -30,7 +30,6 @@ function _extends() {
     };
     return _extends.apply(this, arguments);
 }
-var _class, _class1, _class2, _class3, _class4, _class5, _class6;
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -242,9 +241,9 @@ var require_ieee754 = __commonJS({
         };
     }
 });
-// node_modules/buffer/index.js
+// node_modules/azle/node_modules/buffer/index.js
 var require_buffer = __commonJS({
-    "node_modules/buffer/index.js" (exports1) {
+    "node_modules/azle/node_modules/buffer/index.js" (exports1) {
         
         var base64 = require_base64_js();
         var ieee754 = require_ieee754();
@@ -98168,6 +98167,60 @@ function Func(args, ret, annotations = []) {
 function Service(t) {
     return new ServiceClass(t);
 }
+// node_modules/azle/src/lib/candid/types/primitive/nats/nat64.ts
+var AzleNat64 = class {
+    static getIdl() {
+        return idl_exports.Nat64;
+    }
+    constructor(){
+        this._azleKind = "AzleNat64";
+    }
+};
+var nat64 = AzleNat64;
+// node_modules/azle/node_modules/uuid/dist/esm-browser/rng.js
+var getRandomValues;
+var rnds8 = new Uint8Array(16);
+function rng() {
+    if (!getRandomValues) {
+        getRandomValues = typeof crypto !== "undefined" && crypto.getRandomValues && crypto.getRandomValues.bind(crypto);
+        if (!getRandomValues) {
+            throw new Error("crypto.getRandomValues() not supported. See https://github.com/uuidjs/uuid#getrandomvalues-not-supported");
+        }
+    }
+    return getRandomValues(rnds8);
+}
+// node_modules/azle/node_modules/uuid/dist/esm-browser/stringify.js
+var byteToHex = [];
+for(let i = 0; i < 256; ++i){
+    byteToHex.push((i + 256).toString(16).slice(1));
+}
+function unsafeStringify(arr, offset = 0) {
+    return byteToHex[arr[offset + 0]] + byteToHex[arr[offset + 1]] + byteToHex[arr[offset + 2]] + byteToHex[arr[offset + 3]] + "-" + byteToHex[arr[offset + 4]] + byteToHex[arr[offset + 5]] + "-" + byteToHex[arr[offset + 6]] + byteToHex[arr[offset + 7]] + "-" + byteToHex[arr[offset + 8]] + byteToHex[arr[offset + 9]] + "-" + byteToHex[arr[offset + 10]] + byteToHex[arr[offset + 11]] + byteToHex[arr[offset + 12]] + byteToHex[arr[offset + 13]] + byteToHex[arr[offset + 14]] + byteToHex[arr[offset + 15]];
+}
+// node_modules/azle/node_modules/uuid/dist/esm-browser/native.js
+var randomUUID = typeof crypto !== "undefined" && crypto.randomUUID && crypto.randomUUID.bind(crypto);
+var native_default = {
+    randomUUID
+};
+// node_modules/azle/node_modules/uuid/dist/esm-browser/v4.js
+function v4(options, buf, offset) {
+    if (native_default.randomUUID && !buf && !options) {
+        return native_default.randomUUID();
+    }
+    options = options || {};
+    const rnds = options.random || (options.rng || rng)();
+    rnds[6] = rnds[6] & 15 | 64;
+    rnds[8] = rnds[8] & 63 | 128;
+    if (buf) {
+        offset = offset || 0;
+        for(let i = 0; i < 16; ++i){
+            buf[offset + i] = rnds[i];
+        }
+        return buf;
+    }
+    return unsafeStringify(rnds);
+}
+var v4_default = v4;
 // node_modules/azle/src/lib/candid/serde/visitors/visit/tuple.ts
 function visitTuple(visitor, components, data) {
     const fields = components.map((value, index)=>value.accept(visitor, {
@@ -98247,6 +98300,241 @@ function toIdlMap(candidMap, parent) {
     }
     return idlMap;
 }
+// node_modules/azle/src/lib/candid/types/constructed/variant.ts
+function Variant2(obj) {
+    return _extends({}, obj, {
+        getIdl (parents) {
+            return idl_exports.Variant(toIdlMap(obj, parents));
+        }
+    });
+}
+// node_modules/azle/src/lib/candid/types/primitive/null.ts
+var AzleNull = class {
+    static getIdl() {
+        return idl_exports.Null;
+    }
+    constructor(){
+        this._azleKind = "AzleNull";
+    }
+};
+var Null2 = AzleNull;
+// node_modules/azle/src/lib/system_types/rejection_code.ts
+var RejectionCode = Variant2({
+    NoError: Null2,
+    SysFatal: Null2,
+    SysTransient: Null2,
+    DestinationInvalid: Null2,
+    CanisterReject: Null2,
+    CanisterError: Null2,
+    Unknown: Null2
+});
+// node_modules/azle/src/lib/system_types/result.ts
+var AzleResult = class {
+    getIdl(parents) {
+        return idl_exports.Variant({
+            Ok: toIdl(this.Ok, parents),
+            Err: toIdl(this.Err, parents)
+        });
+    }
+    constructor(ok, err){
+        this.Ok = ok;
+        this.Err = err;
+    }
+};
+function Result(ok, err) {
+    return new AzleResult(ok, err);
+}
+((Result2)=>{
+    function Ok2(value) {
+        return {
+            Ok: value
+        };
+    }
+    Result2.Ok = Ok2;
+    function Err2(value) {
+        return {
+            Err: value
+        };
+    }
+    Result2.Err = Err2;
+})(Result || (Result = {}));
+// node_modules/azle/src/lib/candid/serde/visitors/visit/variant/azle_variant.ts
+function visitAzleVariant(visitor, fields, data) {
+    const candidFields = fields.reduce((acc, [memberName, memberIdl])=>{
+        const fieldData = data.js_data[memberName];
+        const fieldClass = data.candidType[memberName];
+        if (fieldData === void 0) {
+            return acc;
+        }
+        return _extends({}, acc, {
+            [memberName]: memberIdl.accept(visitor, {
+                candidType: fieldClass,
+                js_data: fieldData
+            })
+        });
+    }, {});
+    return candidFields;
+}
+// node_modules/azle/src/lib/candid/serde/visitors/visit/variant/azle_result.ts
+function visitAzleResult(visitor, fields, data) {
+    if ("Ok" in data.js_data) {
+        const OK_FIELD_INDEX = 0;
+        const okField = fields[OK_FIELD_INDEX];
+        const okData = data.js_data["Ok"];
+        const okClass = data.candidType.Ok;
+        return Result.Ok(okField[1].accept(visitor, {
+            js_data: okData,
+            candidType: okClass
+        }));
+    }
+    if ("Err" in data.js_data) {
+        const ERR_FIELD_INDEX = 1;
+        const errField = fields[ERR_FIELD_INDEX];
+        const errData = data.js_data["Err"];
+        const errClass = data.candidType.Err;
+        return Result.Err(errField[1].accept(visitor, {
+            js_data: errData,
+            candidType: errClass
+        }));
+    }
+}
+// node_modules/azle/src/lib/candid/serde/visitors/visit/variant/index.ts
+function visitVariant(visitor, fields, data) {
+    if (data.candidType instanceof AzleResult) {
+        return visitAzleResult(visitor, fields, data);
+    }
+    return visitAzleVariant(visitor, fields, data);
+}
+// node_modules/azle/src/lib/candid/serde/visitors/encode_visitor.ts
+var EncodeVisitor = class extends idl_exports.Visitor {
+    visitService(t, data) {
+        return data.js_data.principal;
+    }
+    visitFunc(t, data) {
+        return data.js_data;
+    }
+    visitPrimitive(t, data) {
+        return data.js_data;
+    }
+    visitTuple(t, components, data) {
+        return visitTuple(this, components, data);
+    }
+    /**
+   * Converts `Some` values (`{Some: value}`) to `[value]` and `None` values
+   * (`{None: null}`) to `[]` (the empty array), transforming any `Some`
+   * values.
+   *
+   * @param t the IDL of the Opt class.
+   * @param ty the IDL type of the `Some` value.
+   * @param data {VisitorData<Variant<{Some: CandidType; None: null;}>,
+   * AzleOpt<CandidType>>} `data.js_data` is the raw Some/None object.
+   * `data.js_class` is an `AzleOpt<T>`.
+   * @returns an array representation of an opt with a transformed some value
+   * if necessary.
+   */ visitOpt(t, ty, data) {
+        if ("Some" in data.js_data) {
+            const candid = ty.accept(this, {
+                js_data: data.js_data.Some,
+                candidType: data.candidType.innerType
+            });
+            return [
+                candid
+            ];
+        }
+        return [];
+    }
+    visitVec(t, ty, data) {
+        return visitVec(this, ty, data);
+    }
+    visitRec(t, ty, data) {
+        return visitRec(this, ty, data);
+    }
+    visitRecord(t, fields, data) {
+        return visitRecord(this, fields, data);
+    }
+    visitVariant(t, fields, data) {
+        return visitVariant(this, fields, data);
+    }
+};
+// node_modules/azle/src/lib/candid/types/constructed/blob.ts
+var AzleBlob = class {
+    static getIdl() {
+        return idl_exports.Vec(idl_exports.Nat8);
+    }
+    constructor(){
+        this._azleKind = "AzleBlob";
+    }
+};
+var blob = AzleBlob;
+// node_modules/azle/src/lib/candid/types/constructed/opt.ts
+function Some(value) {
+    return {
+        Some: value
+    };
+}
+var None = {
+    None: null
+};
+// node_modules/azle/src/lib/candid/types/constructed/record.ts
+function Record2(obj) {
+    return _extends({}, obj, {
+        getIdl (parents) {
+            return idl_exports.Record(toIdlMap(obj, parents));
+        }
+    });
+}
+// node_modules/azle/src/lib/candid/types/constructed/vec.ts
+var AzleVec = class {
+    getIdl(parents) {
+        return idl_exports.Vec(toIdl(this.innerType, parents));
+    }
+    constructor(t){
+        this.innerType = t;
+    }
+};
+function Vec2(t) {
+    return new AzleVec(t);
+}
+// node_modules/azle/src/lib/candid/types/primitive/nats/nat.ts
+var AzleNat = class {
+    static getIdl() {
+        return idl_exports.Nat;
+    }
+    constructor(){
+        this._azleKind = "AzleNat";
+    }
+};
+var nat = AzleNat;
+// node_modules/azle/src/lib/candid/types/primitive/nats/nat8.ts
+var AzleNat8 = class {
+    static getIdl() {
+        return idl_exports.Nat8;
+    }
+    constructor(){
+        this._azleKind = "AzleNat8";
+    }
+};
+var nat8 = AzleNat8;
+// node_modules/azle/src/lib/candid/types/primitive/nats/nat32.ts
+var AzleNat32 = class {
+    static getIdl() {
+        return idl_exports.Nat32;
+    }
+    constructor(){
+        this._azleKind = "AzleNat32";
+    }
+};
+var nat32 = AzleNat32;
+// node_modules/azle/src/lib/candid/types/primitive/text.ts
+var AzleText = class {
+    static getIdl() {
+        return idl_exports.Text;
+    }
+    constructor(){
+        this._azleKind = "AzleText";
+    }
+};
+var text = AzleText;
 // node_modules/azle/src/lib/candid/serde/visitors/decode_visitor.ts
 var DecodeVisitor = class extends idl_exports.Visitor {
     visitService(t, data) {
@@ -98298,154 +98586,35 @@ var DecodeVisitor = class extends idl_exports.Visitor {
         return visitVariant(this, fields, data);
     }
 };
-// node_modules/uuid/dist/esm-browser/rng.js
-var getRandomValues;
-var rnds8 = new Uint8Array(16);
-function rng() {
-    if (!getRandomValues) {
-        getRandomValues = typeof crypto !== "undefined" && crypto.getRandomValues && crypto.getRandomValues.bind(crypto);
-        if (!getRandomValues) {
-            throw new Error("crypto.getRandomValues() not supported. See https://github.com/uuidjs/uuid#getrandomvalues-not-supported");
-        }
+// node_modules/azle/src/lib/candid/serde/decode.ts
+function decode3(candidType, data) {
+    if (Array.isArray(candidType)) {
+        return decodeMultiple(candidType, data);
     }
-    return getRandomValues(rnds8);
+    return decodeSingle(candidType, data);
 }
-// node_modules/uuid/dist/esm-browser/stringify.js
-var byteToHex = [];
-for(let i = 0; i < 256; ++i){
-    byteToHex.push((i + 256).toString(16).slice(1));
-}
-function unsafeStringify(arr, offset = 0) {
-    return byteToHex[arr[offset + 0]] + byteToHex[arr[offset + 1]] + byteToHex[arr[offset + 2]] + byteToHex[arr[offset + 3]] + "-" + byteToHex[arr[offset + 4]] + byteToHex[arr[offset + 5]] + "-" + byteToHex[arr[offset + 6]] + byteToHex[arr[offset + 7]] + "-" + byteToHex[arr[offset + 8]] + byteToHex[arr[offset + 9]] + "-" + byteToHex[arr[offset + 10]] + byteToHex[arr[offset + 11]] + byteToHex[arr[offset + 12]] + byteToHex[arr[offset + 13]] + byteToHex[arr[offset + 14]] + byteToHex[arr[offset + 15]];
-}
-// node_modules/uuid/dist/esm-browser/native.js
-var randomUUID = typeof crypto !== "undefined" && crypto.randomUUID && crypto.randomUUID.bind(crypto);
-var native_default = {
-    randomUUID
-};
-// node_modules/uuid/dist/esm-browser/v4.js
-function v4(options, buf, offset) {
-    if (native_default.randomUUID && !buf && !options) {
-        return native_default.randomUUID();
+function decodeSingle(candidType, data) {
+    const idl = toIdl(candidType);
+    const idlIsAzleVoid = Array.isArray(idl);
+    if (idlIsAzleVoid) {
+        return void 0;
     }
-    options = options || {};
-    const rnds = options.random || (options.rng || rng)();
-    rnds[6] = rnds[6] & 15 | 64;
-    rnds[8] = rnds[8] & 63 | 128;
-    if (buf) {
-        offset = offset || 0;
-        for(let i = 0; i < 16; ++i){
-            buf[offset + i] = rnds[i];
-        }
-        return buf;
-    }
-    return unsafeStringify(rnds);
-}
-var v4_default = v4;
-// node_modules/azle/src/lib/candid/types/constructed/blob.ts
-var AzleBlob = (_class = class {
-    static toBytes(data) {
-        return encode3(this, data);
-    }
-    static fromBytes(bytes2) {
-        return decode3(this, bytes2);
-    }
-    static getIdl() {
-        return idl_exports.Vec(idl_exports.Nat8);
-    }
-    constructor(){
-        this._azleKind = "AzleBlob";
-    }
-}, _class._azleKind = "AzleBlob", _class);
-var blob = AzleBlob;
-// node_modules/azle/src/lib/candid/types/constructed/opt.ts
-function Some(value) {
-    return {
-        Some: value
-    };
-}
-var None = {
-    None: null
-};
-// node_modules/azle/src/lib/candid/types/constructed/record.ts
-function Record2(obj) {
-    return _extends({}, obj, {
-        tsType: {},
-        toBytes (data) {
-            return encode3(this, data);
-        },
-        fromBytes (bytes2) {
-            return decode3(this, bytes2);
-        },
-        getIdl (parents) {
-            return idl_exports.Record(toIdlMap(obj, parents));
-        }
+    const candidDecodedValue = idl_exports.decode([
+        idl
+    ], data)[0];
+    return idl.accept(new DecodeVisitor(), {
+        candidType,
+        js_data: candidDecodedValue
     });
 }
-// node_modules/azle/src/lib/candid/types/primitive/nats/nat.ts
-var AzleNat = (_class1 = class {
-    static toBytes(data) {
-        return encode3(this, data);
-    }
-    static fromBytes(bytes2) {
-        return decode3(this, bytes2);
-    }
-    static getIdl() {
-        return idl_exports.Nat;
-    }
-    constructor(){
-        this._azleKind = "AzleNat";
-    }
-}, _class1._azleKind = "AzleNat", _class1);
-var nat = AzleNat;
-// node_modules/azle/src/lib/candid/types/primitive/null.ts
-var AzleNull = (_class2 = class {
-    static toBytes(data) {
-        return encode3(this, data);
-    }
-    static fromBytes(bytes2) {
-        return decode3(this, bytes2);
-    }
-    static getIdl() {
-        return idl_exports.Null;
-    }
-    constructor(){
-        this._azleKind = "AzleNull";
-    }
-}, _class2._azleKind = "AzleNull", _class2);
-var Null2 = AzleNull;
-// node_modules/azle/src/lib/candid/types/primitive/text.ts
-var AzleText = (_class3 = class {
-    static toBytes(data) {
-        return encode3(this, data);
-    }
-    static fromBytes(bytes2) {
-        return decode3(this, bytes2);
-    }
-    static getIdl() {
-        return idl_exports.Text;
-    }
-    constructor(){
-        this._azleKind = "AzleText";
-    }
-}, _class3._azleKind = "AzleText", _class3);
-var text = AzleText;
-// node_modules/azle/src/lib/candid/types/primitive/void.ts
-var AzleVoid = (_class4 = class {
-    static toBytes(data) {
-        return encode3(this, data);
-    }
-    static fromBytes(bytes2) {
-        return decode3(this, bytes2);
-    }
-    static getIdl() {
-        return [];
-    }
-    constructor(){
-        this._azleKind = "AzleVoid";
-    }
-}, _class4._azleKind = "AzleVoid", _class4);
-var Void = AzleVoid;
+function decodeMultiple(candidTypes, data) {
+    const idls = toIdlArray(candidTypes);
+    const decoded = idl_exports.decode(idls, data);
+    return idls.map((idl, index)=>idl.accept(new DecodeVisitor(), {
+            candidType: candidTypes[index],
+            js_data: decoded[index]
+        }));
+}
 // node_modules/azle/src/lib/candid/types/reference/service/canister_function/query_update.ts
 function createQueryMethods(canisterOptions) {
     return Object.entries(canisterOptions).filter(([_name, canisterMethod])=>canisterMethod.mode === "query").map(([methodName2, canisterMethod])=>createQueryMethod(methodName2, canisterMethod.async, canisterMethod.guard));
@@ -98562,8 +98731,8 @@ function createCanisterFunctionBase(canisterOptions) {
             const key = entry[0];
             const value = entry[1];
             return _extends({}, acc, {
-                [key]: (notify2, callFunction, cycles, args)=>{
-                    return serviceCall(principal, key, value.paramCandidTypes, value.returnCandidType)(notify2, callFunction, cycles, args);
+                [key]: (...args)=>{
+                    return serviceCall(principal, key, value.paramCandidTypes, value.returnCandidType)(...args);
                 }
             });
         }, {});
@@ -98573,7 +98742,7 @@ function createCanisterFunctionBase(canisterOptions) {
     };
 }
 function serviceCall(canisterId, methodName2, paramCandidTypes, returnCandidType) {
-    return async (notify2, callFunction, cycles, args)=>{
+    return async function(notify2, callFunction, cycles, ...args) {
         const encodedArgs = encode3(paramCandidTypes, args);
         if (notify2) {
             try {
@@ -98600,197 +98769,9 @@ function Canister(canisterOptions) {
     return result;
 }
 // node_modules/azle/src/lib/candid/types/reference/principal.ts
-var Principal3 = (_class5 = class extends Principal {
-    static toBytes(data) {
-        return encode3(this, data);
-    }
-    static fromBytes(bytes2) {
-        return decode3(this, bytes2);
-    }
-    static getIdl(_parents) {
+var Principal3 = class extends Principal {
+    static getIdl() {
         return idl_exports.Principal;
-    }
-}, _class5._azleKind = "Principal", _class5);
-// node_modules/azle/src/lib/candid/serde/decode.ts
-function decode3(candidType, data) {
-    if (Array.isArray(candidType)) {
-        return decodeMultiple(candidType, data);
-    }
-    return decodeSingle(candidType, data);
-}
-function decodeSingle(candidType, data) {
-    const idl = toIdl(candidType);
-    const idlIsAzleVoid = Array.isArray(idl);
-    if (idlIsAzleVoid) {
-        return void 0;
-    }
-    const candidDecodedValue = idl_exports.decode([
-        idl
-    ], data)[0];
-    return idl.accept(new DecodeVisitor(), {
-        candidType,
-        js_data: candidDecodedValue
-    });
-}
-function decodeMultiple(candidTypes, data) {
-    const idls = toIdlArray(candidTypes);
-    const decoded = idl_exports.decode(idls, data);
-    return idls.map((idl, index)=>idl.accept(new DecodeVisitor(), {
-            candidType: candidTypes[index],
-            js_data: decoded[index]
-        }));
-}
-// node_modules/azle/src/lib/candid/types/constructed/variant.ts
-function Variant2(obj) {
-    return _extends({}, obj, {
-        tsType: {},
-        toBytes (data) {
-            return encode3(this, data);
-        },
-        fromBytes (bytes2) {
-            return decode3(this, bytes2);
-        },
-        getIdl (parents) {
-            return idl_exports.Variant(toIdlMap(obj, parents));
-        }
-    });
-}
-// node_modules/azle/src/lib/system_types/rejection_code.ts
-var RejectionCode = Variant2({
-    NoError: Null2,
-    SysFatal: Null2,
-    SysTransient: Null2,
-    DestinationInvalid: Null2,
-    CanisterReject: Null2,
-    CanisterError: Null2,
-    Unknown: Null2
-});
-// node_modules/azle/src/lib/system_types/result.ts
-var AzleResult = class {
-    getIdl(parents) {
-        return idl_exports.Variant({
-            Ok: toIdl(this.Ok, parents),
-            Err: toIdl(this.Err, parents)
-        });
-    }
-    constructor(ok, err){
-        this.Ok = ok;
-        this.Err = err;
-    }
-};
-function Result(ok, err) {
-    return new AzleResult(ok, err);
-}
-((Result3)=>{
-    function Ok2(value) {
-        return {
-            Ok: value
-        };
-    }
-    Result3.Ok = Ok2;
-    function Err2(value) {
-        return {
-            Err: value
-        };
-    }
-    Result3.Err = Err2;
-})(Result || (Result = {}));
-// node_modules/azle/src/lib/candid/serde/visitors/visit/variant/azle_variant.ts
-function visitAzleVariant(visitor, fields, data) {
-    const candidFields = fields.reduce((acc, [memberName, memberIdl])=>{
-        const fieldData = data.js_data[memberName];
-        const fieldClass = data.candidType[memberName];
-        if (fieldData === void 0) {
-            return acc;
-        }
-        return _extends({}, acc, {
-            [memberName]: memberIdl.accept(visitor, {
-                candidType: fieldClass,
-                js_data: fieldData
-            })
-        });
-    }, {});
-    return candidFields;
-}
-// node_modules/azle/src/lib/candid/serde/visitors/visit/variant/azle_result.ts
-function visitAzleResult(visitor, fields, data) {
-    if ("Ok" in data.js_data) {
-        const OK_FIELD_INDEX = 0;
-        const okField = fields[OK_FIELD_INDEX];
-        const okData = data.js_data["Ok"];
-        const okClass = data.candidType.Ok;
-        return Result.Ok(okField[1].accept(visitor, {
-            js_data: okData,
-            candidType: okClass
-        }));
-    }
-    if ("Err" in data.js_data) {
-        const ERR_FIELD_INDEX = 1;
-        const errField = fields[ERR_FIELD_INDEX];
-        const errData = data.js_data["Err"];
-        const errClass = data.candidType.Err;
-        return Result.Err(errField[1].accept(visitor, {
-            js_data: errData,
-            candidType: errClass
-        }));
-    }
-}
-// node_modules/azle/src/lib/candid/serde/visitors/visit/variant/index.ts
-function visitVariant(visitor, fields, data) {
-    if (data.candidType instanceof AzleResult) {
-        return visitAzleResult(visitor, fields, data);
-    }
-    return visitAzleVariant(visitor, fields, data);
-}
-// node_modules/azle/src/lib/candid/serde/visitors/encode_visitor.ts
-var EncodeVisitor = class extends idl_exports.Visitor {
-    visitService(t, data) {
-        return data.js_data.principal;
-    }
-    visitFunc(t, data) {
-        return data.js_data;
-    }
-    visitPrimitive(t, data) {
-        return data.js_data;
-    }
-    visitTuple(t, components, data) {
-        return visitTuple(this, components, data);
-    }
-    /**
-   * Converts `Some` values (`{Some: value}`) to `[value]` and `None` values
-   * (`{None: null}`) to `[]` (the empty array), transforming any `Some`
-   * values.
-   *
-   * @param t the IDL of the Opt class.
-   * @param ty the IDL type of the `Some` value.
-   * @param data {VisitorData<Variant<{Some: CandidType; None: null;}>,
-   * AzleOpt<CandidType>>} `data.js_data` is the raw Some/None object.
-   * `data.js_class` is an `AzleOpt<T>`.
-   * @returns an array representation of an opt with a transformed some value
-   * if necessary.
-   */ visitOpt(t, ty, data) {
-        if ("Some" in data.js_data) {
-            const candid = ty.accept(this, {
-                js_data: data.js_data.Some,
-                candidType: data.candidType.innerType
-            });
-            return [
-                candid
-            ];
-        }
-        return [];
-    }
-    visitVec(t, ty, data) {
-        return visitVec(this, ty, data);
-    }
-    visitRec(t, ty, data) {
-        return visitRec(this, ty, data);
-    }
-    visitRecord(t, fields, data) {
-        return visitRecord(this, fields, data);
-    }
-    visitVariant(t, fields, data) {
-        return visitVariant(this, fields, data);
     }
 };
 // node_modules/azle/src/lib/candid/serde/encode.ts
@@ -98827,22 +98808,6 @@ function encodeMultiple(candidTypes, data) {
         }));
     return new Uint8Array(idl_exports.encode(idls, values));
 }
-// node_modules/azle/src/lib/candid/types/primitive/nats/nat64.ts
-var AzleNat64 = (_class6 = class {
-    static toBytes(data) {
-        return encode3(this, data);
-    }
-    static fromBytes(bytes2) {
-        return decode3(this, bytes2);
-    }
-    static getIdl() {
-        return idl_exports.Nat64;
-    }
-    constructor(){
-        this._azleKind = "AzleNat64";
-    }
-}, _class6._azleKind = "AzleNat64", _class6);
-var nat64 = AzleNat64;
 // node_modules/azle/src/lib/ic/call_raw.ts
 function callRaw(canisterId, method, argsRaw, payment) {
     if (globalThis._azleIc === void 0) {
@@ -98918,7 +98883,7 @@ function call(method, config) {
     }
     const { callFunction, cycles } = getCallFunctionAndCycles(config == null ? void 0 : config.cycles, config == null ? void 0 : config.cycles128);
     var _config_args;
-    return method(false, callFunction, cycles, (_config_args = config == null ? void 0 : config.args) != null ? _config_args : []);
+    return method(false, callFunction, cycles, ...(_config_args = config == null ? void 0 : config.args) != null ? _config_args : []);
 }
 function getCallFunctionAndCycles(cycles, cycles128) {
     if (cycles128 !== void 0) {
@@ -99011,8 +98976,8 @@ function instructionCounter() {
     if (globalThis._azleIc === void 0) {
         return void 0;
     }
-    const instructionCounterString = globalThis._azleIc.instructionCounter();
-    return BigInt(instructionCounterString);
+    const instructionCounterCandidBytes = globalThis._azleIc.instructionCounter();
+    return decode3(nat64, instructionCounterCandidBytes);
 }
 // node_modules/azle/src/lib/ic/is_controller.ts
 function isController(principal) {
@@ -99091,23 +99056,24 @@ function notify(method, config) {
         return void 0;
     }
     var _config_cycles, _config_args;
-    return method(true, notifyRaw, (_config_cycles = config == null ? void 0 : config.cycles) != null ? _config_cycles : 0n, (_config_args = config == null ? void 0 : config.args) != null ? _config_args : []);
+    return method(true, notifyRaw, (_config_cycles = config == null ? void 0 : config.cycles) != null ? _config_cycles : 0n, ...(_config_args = config == null ? void 0 : config.args) != null ? _config_args : []);
 }
 // node_modules/azle/src/lib/ic/performance_counter.ts
 function performanceCounter(counterType) {
     if (globalThis._azleIc === void 0) {
         return void 0;
     }
-    const performanceCounterString = globalThis._azleIc.performanceCounter(counterType.toString());
-    return BigInt(performanceCounterString);
+    const counterTypeCandidBytes = encode3(nat32, counterType).buffer;
+    const performanceCounterCandidBytes = globalThis._azleIc.performanceCounter(counterTypeCandidBytes);
+    return decode3(nat64, performanceCounterCandidBytes);
 }
 // node_modules/azle/src/lib/ic/print.ts
 function print(...args) {
     return globalThis._azleIc ? globalThis._azleIc.print(...args) : void 0;
 }
 // node_modules/azle/src/lib/ic/reject.ts
-function reject(message2) {
-    return globalThis._azleIc ? globalThis._azleIc.reject(message2) : void 0;
+function reject(message) {
+    return globalThis._azleIc ? globalThis._azleIc.reject(message) : void 0;
 }
 // node_modules/azle/src/lib/ic/reject_code.ts
 function rejectCode() {
@@ -99205,7 +99171,8 @@ function stable64Grow(newPages) {
     if (globalThis._azleIc === void 0) {
         return void 0;
     }
-    return BigInt(globalThis._azleIc.stable64Grow(newPages.toString()));
+    const newPagesCandidBytes = encode3(nat64, newPages).buffer;
+    return decode3(nat64, globalThis._azleIc.stable64Grow(newPagesCandidBytes));
 }
 // node_modules/azle/src/lib/ic/stable_64_read.ts
 function stable64Read(offset, length) {
@@ -99219,21 +99186,28 @@ function stable64Read(offset, length) {
         offset,
         length
     ]).buffer;
-    return new Uint8Array(globalThis._azleIc.stable64Read(offset.toString(), length.toString()));
+    return new Uint8Array(globalThis._azleIc.stable64Read(paramsCandidBytes));
 }
 // node_modules/azle/src/lib/ic/stable_64_size.ts
 function stable64Size() {
     if (globalThis._azleIc === void 0) {
         return void 0;
     }
-    return BigInt(globalThis._azleIc.stable64Size());
+    return decode3(nat64, globalThis._azleIc.stable64Size());
 }
 // node_modules/azle/src/lib/ic/stable_64_write.ts
-function stable64Write(offset, buf) {
+function stable64Write(offset, buffer) {
     if (globalThis._azleIc === void 0) {
         return void 0;
     }
-    return globalThis._azleIc.stable64Write(offset.toString(), buf.buffer);
+    const paramsCandidBytes = encode3([
+        nat64,
+        blob
+    ], [
+        offset,
+        buffer
+    ]).buffer;
+    return globalThis._azleIc.stable64Write(paramsCandidBytes);
 }
 // node_modules/azle/src/lib/ic/stable_bytes.ts
 function stableBytes() {
@@ -99247,42 +99221,58 @@ function stableGrow(newPages) {
     if (globalThis._azleIc === void 0) {
         return void 0;
     }
-    return Number(globalThis._azleIc.stableGrow(newPages.toString()));
+    const newPagesCandidBytes = encode3(nat32, newPages).buffer;
+    return decode3(nat32, globalThis._azleIc.stableGrow(newPagesCandidBytes));
 }
 // node_modules/azle/src/lib/ic/stable_read.ts
 function stableRead(offset, length) {
     if (globalThis._azleIc === void 0) {
         return void 0;
     }
-    return new Uint8Array(globalThis._azleIc.stableRead(offset.toString(), length.toString()));
+    const paramsCandidBytes = encode3([
+        nat32,
+        nat32
+    ], [
+        offset,
+        length
+    ]).buffer;
+    return new Uint8Array(globalThis._azleIc.stableRead(paramsCandidBytes));
 }
 // node_modules/azle/src/lib/ic/stable_size.ts
 function stableSize() {
     if (globalThis._azleIc === void 0) {
         return void 0;
     }
-    return Number(globalThis._azleIc.stableSize());
+    return decode3(nat32, globalThis._azleIc.stableSize());
 }
 // node_modules/azle/src/lib/ic/stable_write.ts
-function stableWrite(offset, buf) {
+function stableWrite(offset, buffer) {
     if (globalThis._azleIc === void 0) {
         return void 0;
     }
-    return globalThis._azleIc.stableWrite(offset.toString(), buf.buffer);
+    const paramsCandidBytes = encode3([
+        nat32,
+        blob
+    ], [
+        offset,
+        buffer
+    ]).buffer;
+    return globalThis._azleIc.stableWrite(paramsCandidBytes);
 }
 // node_modules/azle/src/lib/ic/time.ts
 function time() {
     if (globalThis._azleIc === void 0) {
         return void 0;
     }
-    return BigInt(globalThis._azleIc.time());
+    const timeCandidBytes = globalThis._azleIc.time();
+    return decode3(nat64, timeCandidBytes);
 }
 // node_modules/azle/src/lib/ic/trap.ts
-function trap(message2) {
+function trap(message) {
     if (globalThis._azleIc === void 0) {
         return void 0;
     }
-    return globalThis._azleIc.trap(message2);
+    return globalThis._azleIc.trap(message);
 }
 // node_modules/azle/src/lib/ic/index.ts
 var ic = {
@@ -99336,142 +99326,6 @@ var ic = {
 };
 // node_modules/azle/src/lib/globals.ts
 var import_buffer3 = __toESM(require_buffer());
-// node_modules/azle/src/lib/stable_structures/stable_json.ts
-function StableJson(options) {
-    return {
-        toBytes (data) {
-            var _options_replacer;
-            const result = JSON.stringify(data, (_options_replacer = options == null ? void 0 : options.replacer) != null ? _options_replacer : replacer);
-            return Uint8Array.from(Buffer.from(result));
-        },
-        fromBytes (bytes2) {
-            var _options_reviver;
-            return JSON.parse(Buffer.from(bytes2).toString(), (_options_reviver = options == null ? void 0 : options.reviver) != null ? _options_reviver : reviver);
-        }
-    };
-}
-var stableJson = StableJson();
-function replacer(_key, value) {
-    if (typeof value === "bigint") {
-        return {
-            __bigint__: value.toString()
-        };
-    }
-    if (typeof value === "object" && value !== null && value._isPrincipal === true) {
-        return {
-            __principal__: value.toString()
-        };
-    }
-    if (typeof value === "number" && isNaN(value)) {
-        return {
-            __nan__: "__nan__"
-        };
-    }
-    if (typeof value === "number" && value === Infinity) {
-        return {
-            __infinity__: "__infinity__"
-        };
-    }
-    if (typeof value === "number" && value === -Infinity) {
-        return {
-            __negative_infinity__: "__negative_infinity__"
-        };
-    }
-    if (value instanceof Int8Array) {
-        return {
-            __int8array__: Array.from(value)
-        };
-    }
-    if (value instanceof Int16Array) {
-        return {
-            __int16array__: Array.from(value)
-        };
-    }
-    if (value instanceof Int32Array) {
-        return {
-            __int32array__: Array.from(value)
-        };
-    }
-    if (value instanceof BigInt64Array) {
-        return {
-            __bigint64array__: Array.from(value)
-        };
-    }
-    if (value instanceof Uint8Array) {
-        return {
-            __uint8array__: Array.from(value)
-        };
-    }
-    if (value instanceof Uint16Array) {
-        return {
-            __uint16array__: Array.from(value)
-        };
-    }
-    if (value instanceof Uint32Array) {
-        return {
-            __uint32array__: Array.from(value)
-        };
-    }
-    if (value instanceof BigUint64Array) {
-        return {
-            __biguint64array__: Array.from(value)
-        };
-    }
-    return value;
-}
-function reviver(_key, value) {
-    if (typeof value === "object" && value !== null) {
-        if (typeof value.__bigint__ === "string") {
-            return BigInt(value.__bigint__);
-        }
-        if (typeof value.__principal__ === "string") {
-            return Principal3.fromText(value.__principal__);
-        }
-        if (value.__nan__ === "__nan__") {
-            return NaN;
-        }
-        if (value.__infinity__ === "__infinity__") {
-            return Infinity;
-        }
-        if (value.__negative_infinity__ === "__negative_infinity__") {
-            return -Infinity;
-        }
-        if (typeof value.__int8array__ === "object") {
-            return Int8Array.from(value.__int8array__);
-        }
-        if (typeof value.__int16array__ === "object") {
-            return Int16Array.from(value.__int16array__);
-        }
-        if (typeof value.__int32array__ === "object") {
-            return Int32Array.from(value.__int32array__);
-        }
-        if (typeof value.__bigint64array__ === "object") {
-            return BigInt64Array.from(value.__bigint64array__);
-        }
-        if (typeof value.__uint8array__ === "object") {
-            return Uint8Array.from(value.__uint8array__);
-        }
-        if (typeof value.__uint16array__ === "object") {
-            return Uint16Array.from(value.__uint16array__);
-        }
-        if (typeof value.__uint32array__ === "object") {
-            return Uint32Array.from(value.__uint32array__);
-        }
-        if (typeof value.__biguint64array__ === "object") {
-            return BigUint64Array.from(value.__biguint64array__);
-        }
-    }
-    return value;
-}
-// node_modules/azle/src/lib/globals.ts
-if (globalThis._azleIc) {
-    globalThis.console = _extends({}, globalThis.console, {
-        log: (...args)=>{
-            const jsonStringifiedArgs = args.map((arg)=>JSON.stringify(arg, replacer, 4)).join(" ");
-            ic.print(jsonStringifiedArgs);
-        }
-    });
-}
 globalThis.TextDecoder = require_text_encoding().TextDecoder;
 globalThis.TextEncoder = require_text_encoding().TextEncoder;
 globalThis._azleIcTimers = {};
@@ -99479,6 +99333,11 @@ globalThis._azleResolveIds = {};
 globalThis._azleRejectIds = {};
 globalThis._azleTimerCallbacks = {};
 globalThis._azleGuardFunctions = {};
+globalThis.console = _extends({}, globalThis.console, {
+    log: (...args)=>{
+        ic.print(...args);
+    }
+});
 globalThis.crypto = _extends({}, globalThis.crypto, {
     getRandomValues: ()=>{
         let array = new Uint8Array(32);
@@ -99559,26 +99418,468 @@ function update(paramCandidTypes, returnCandidType, callback, methodArgs) {
         guard: methodArgs == null ? void 0 : methodArgs.guard
     };
 }
+// node_modules/azle/src/lib/stable_b_tree_map.ts
+function StableBTreeMap(keyType, valueType, memoryId) {
+    if (globalThis._azleIc === void 0) {
+        return void 0;
+    }
+    const candidEncodedMemoryId = encode3(nat8, memoryId).buffer;
+    globalThis._azleIc.stableBTreeMapInit(candidEncodedMemoryId);
+    return {
+        /**
+     * Checks if the given key exists in the map.
+     * @param key the key to check.
+     * @returns `true` if the key exists in the map, `false` otherwise.
+     */ containsKey (key) {
+            if (globalThis._azleIc === void 0) {
+                return void 0;
+            }
+            const candidEncodedMemoryId2 = encode3(nat8, memoryId).buffer;
+            const candidEncodedKey = encode3(keyType, key).buffer;
+            return globalThis._azleIc.stableBTreeMapContainsKey(candidEncodedMemoryId2, candidEncodedKey);
+        },
+        /**
+     * Retrieves the value stored at the provided key.
+     * @param key the location from which to retrieve.
+     * @returns the value associated with the given key, if it exists.
+     */ get (key) {
+            if (globalThis._azleIc === void 0) {
+                return void 0;
+            }
+            const candidEncodedMemoryId2 = encode3(nat8, memoryId).buffer;
+            const candidEncodedKey = encode3(keyType, key).buffer;
+            const candidEncodedValue = globalThis._azleIc.stableBTreeMapGet(candidEncodedMemoryId2, candidEncodedKey);
+            if (candidEncodedValue === void 0) {
+                return None;
+            } else {
+                return Some(decode3(valueType, candidEncodedValue));
+            }
+        },
+        /**
+     * Inserts a value into the map at the provided key.
+     * @param key the location at which to insert.
+     * @param value the value to insert.
+     * @returns the previous value of the key, if present.
+     */ insert (key, value) {
+            if (globalThis._azleIc === void 0) {
+                return void 0;
+            }
+            const candidEncodedMemoryId2 = encode3(nat8, memoryId).buffer;
+            const candidEncodedKey = encode3(keyType, key).buffer;
+            const candidEncodedValue = encode3(valueType, value).buffer;
+            const candidEncodedResultValue = globalThis._azleIc.stableBTreeMapInsert(candidEncodedMemoryId2, candidEncodedKey, candidEncodedValue);
+            if (candidEncodedResultValue === void 0) {
+                return None;
+            } else {
+                return Some(decode3(valueType, candidEncodedResultValue));
+            }
+        },
+        /**
+     * Checks if the map is empty.
+     * @returns `true` if the map contains no elements, `false` otherwise.
+     */ isEmpty () {
+            if (globalThis._azleIc === void 0) {
+                return void 0;
+            }
+            const candidEncodedMemoryId2 = encode3(nat8, memoryId).buffer;
+            return globalThis._azleIc.stableBTreeMapIsEmpty(candidEncodedMemoryId2);
+        },
+        /**
+     * Retrieves the items in the map in sorted order.
+     * @returns tuples representing key/value pairs.
+     */ items () {
+            if (globalThis._azleIc === void 0) {
+                return void 0;
+            }
+            const candidEncodedMemoryId2 = encode3(nat8, memoryId).buffer;
+            const candidEncodedItems = globalThis._azleIc.stableBTreeMapItems(candidEncodedMemoryId2);
+            return candidEncodedItems.map((candidEncodedItem)=>{
+                return [
+                    decode3(keyType, candidEncodedItem[0]),
+                    decode3(valueType, candidEncodedItem[1])
+                ];
+            });
+        },
+        /**
+     * The keys for each element in the map in sorted order.
+     * @returns they keys in the map.
+     */ keys () {
+            if (globalThis._azleIc === void 0) {
+                return void 0;
+            }
+            const candidEncodedMemoryId2 = encode3(nat8, memoryId).buffer;
+            const candidEncodedKeys = globalThis._azleIc.stableBTreeMapKeys(candidEncodedMemoryId2);
+            return candidEncodedKeys.map((candidEncodedKey)=>{
+                return decode3(keyType, candidEncodedKey);
+            });
+        },
+        /**
+     * Checks to see how many elements are in the map.
+     * @returns the number of elements in the map.
+     */ len () {
+            if (globalThis._azleIc === void 0) {
+                return void 0;
+            }
+            const candidEncodedMemoryId2 = encode3(nat8, memoryId).buffer;
+            const candidEncodedLen = globalThis._azleIc.stableBTreeMapLen(candidEncodedMemoryId2);
+            return decode3(nat64, candidEncodedLen);
+        },
+        /**
+     * Removes a key from the map.
+     * @param key the location from which to remove.
+     * @returns the previous value at the key if it exists, `null` otherwise.
+     */ remove (key) {
+            if (globalThis._azleIc === void 0) {
+                return void 0;
+            }
+            const candidEncodedMemoryId2 = encode3(nat8, memoryId).buffer;
+            const candidEncodedKey = encode3(keyType, key).buffer;
+            const candidEncodedValue = globalThis._azleIc.stableBTreeMapRemove(candidEncodedMemoryId2, candidEncodedKey);
+            if (candidEncodedValue === void 0) {
+                return None;
+            } else {
+                return Some(decode3(valueType, candidEncodedValue));
+            }
+        },
+        /**
+     * The values in the map in sorted order.
+     * @returns the values in the map.
+     */ values () {
+            if (globalThis._azleIc === void 0) {
+                return void 0;
+            }
+            const candidEncodedMemoryId2 = encode3(nat8, memoryId).buffer;
+            const candidEncodedValues = globalThis._azleIc.stableBTreeMapValues(candidEncodedMemoryId2);
+            return candidEncodedValues.map((candidEncodedValue)=>{
+                return decode3(valueType, candidEncodedValue);
+            });
+        }
+    };
+}
 // backend/index.ts
-var Image = Record2({
-    id: BigInt,
-    // other properties...
-    uploader: Principal3
+var User = Record2({
+    principal: Principal3,
+    username: text,
+    profileImage: blob
 });
-var message = "";
+var NewsArticle = Record2({
+    id: Principal3,
+    title: text,
+    content: text,
+    image: blob,
+    date: text,
+    author: text
+});
+var Community = Record2({
+    id: Principal3,
+    name: text,
+    description: text,
+    members: Vec2(User)
+});
+var Course = Record2({
+    id: Principal3,
+    title: text,
+    description: text
+});
+var userDataStorage = StableBTreeMap(Principal3, User, 0);
+var newsArticleStorage = StableBTreeMap(Principal3, NewsArticle, 1);
+var communityStorage = StableBTreeMap(Principal3, Community, 2);
+var courseStorage = StableBTreeMap(Principal3, Course, 3);
 var backend_default = Canister({
-    // Query calls complete quickly because they do not go through consensus
-    getMessage: query([], text, ()=>{
-        return message;
-    }),
-    // Update calls take a few seconds to complete
-    // This is because they persist state changes and go through consensus
-    setMessage: update([
+    createNewsArticle: update([
+        text,
+        text,
+        blob,
+        text,
         text
-    ], Void, (newMessage)=>{
-        message = newMessage;
+    ], Result(NewsArticle, text), (title, content, image, date, author)=>{
+        if (!title || !content || !image || !date || !author) {
+            return Result.Err("Please provide all required information.");
+        }
+        const id2 = Principal3.fromText(`${title}-${date}`);
+        const newsArticle = {
+            id: id2,
+            title,
+            content,
+            image,
+            date,
+            author
+        };
+        newsArticleStorage.insert(id2, newsArticle);
+        return Result.Ok(newsArticle);
+    }),
+    getNewsArticleById: query([
+        text,
+        text
+    ], Variant2({
+        Ok: NewsArticle,
+        Err: text
+    }), (title, date)=>{
+        if (!title || !date) {
+            return {
+                Err: "Please provide title and date."
+            };
+        }
+        const id2 = Principal3.fromText(`${title}-${date}`);
+        const newsArticleOpt = newsArticleStorage.get(id2);
+        if ("Some" in newsArticleOpt) {
+            const newsArticle = newsArticleOpt.Some;
+            return {
+                Ok: newsArticle
+            };
+        } else {
+            return {
+                Err: "News article not found."
+            };
+        }
+    }),
+    listNewsArticles: query([], Variant2({
+        Ok: Vec2(NewsArticle),
+        Err: text
+    }), ()=>{
+        const newsArticles = newsArticleStorage.entries().map((entry)=>entry[1]);
+        return {
+            Ok: newsArticles
+        };
+    }),
+    updateNewsArticle: update([
+        text,
+        text,
+        blob,
+        text,
+        text
+    ], Result(NewsArticle, text), (title, content, image, date, author)=>{
+        if (!title || !content || !image || !date || !author) {
+            return Result.Err("Invalid input parameters. Please provide all required information.");
+        }
+        const id2 = Principal3.fromText(`${title}-${date}`);
+        const newsArticleOpt = newsArticleStorage.get(id2);
+        if ("Some" in newsArticleOpt) {
+            const updatedNewsArticle = _extends({}, newsArticleOpt.Some, {
+                title,
+                content,
+                image,
+                author
+            });
+            newsArticleStorage.insert(id2, updatedNewsArticle);
+            return Result.Ok(updatedNewsArticle);
+        } else {
+            return Result.Err("News article not found.");
+        }
+    }),
+    deleteNewsArticle: update([
+        text,
+        text
+    ], Result(NewsArticle, text), (title, date)=>{
+        if (!title || !date) {
+            return Result.Err("Please provide title and date.");
+        }
+        const id2 = Principal3.fromText(`${title}-${date}`);
+        const newsArticleOpt = newsArticleStorage.get(id2);
+        if ("Some" in newsArticleOpt) {
+            newsArticleStorage.delete(id2);
+            return Result.Ok(newsArticleOpt.Some);
+        } else {
+            return Result.Err("News article not found.");
+        }
+    }),
+    // Create a new community
+    createCommunity: update([
+        text,
+        text,
+        Vec2(User)
+    ], Result(Community, text), (name, description, members)=>{
+        if (!name || !description || !members) {
+            return Result.Err("Invalid input parameters. Please provide all required information.");
+        }
+        const id2 = Principal3.fromText(`${name}-${Date.now()}`);
+        const community = {
+            id: id2,
+            name,
+            description,
+            members
+        };
+        communityStorage.insert(id2, community);
+        return Result.Ok(community);
+    }),
+    // Get community details by ID
+    getCommunityByID: query([
+        text
+    ], Variant2({
+        Ok: Community,
+        Err: text
+    }), (id2)=>{
+        if (!id2) {
+            return {
+                Err: "Please provide a community ID."
+            };
+        }
+        const principal = Principal3.fromText(id2);
+        const communityOpt = communityStorage.get(principal);
+        if ("Some" in communityOpt) {
+            return {
+                Ok: communityOpt.Some
+            };
+        } else {
+            return {
+                Err: "Community not found."
+            };
+        }
+    }),
+    // Join a community
+    joinCommunity: update([
+        text,
+        text,
+        Principal3
+    ], Result(Community, text), (communityId, username, memberPrincipal)=>{
+        if (!communityId || !username || !memberPrincipal) {
+            return Result.Err("Invalid input parameters. Please provide all required information.");
+        }
+        const communityOpt = communityStorage.get(communityId);
+        if ("Some" in communityOpt) {
+            const community = communityOpt.Some;
+            const updatedMembers = community.members.concat({
+                principal: memberPrincipal,
+                username
+            });
+            communityStorage.insert(communityId, _extends({}, community, {
+                members: updatedMembers
+            }));
+            return Result.Ok(_extends({}, community, {
+                members: updatedMembers
+            }));
+        } else {
+            return Result.Err("Community not found.");
+        }
+    }),
+    // Leave a community
+    leaveCommunity: update([
+        text,
+        Principal3
+    ], Result(Community, text), (communityId, memberPrincipal)=>{
+        if (!communityId || !memberPrincipal) {
+            return Result.Err("Please provide all required information.");
+        }
+        const communityOpt = communityStorage.get(communityId);
+        if ("Some" in communityOpt) {
+            const community = communityOpt.Some;
+            const updatedMembers = community.members.filter((member)=>member.principal !== memberPrincipal);
+            communityStorage.insert(communityId, _extends({}, community, {
+                members: updatedMembers
+            }));
+            return Result.Ok(_extends({}, community, {
+                members: updatedMembers
+            }));
+        } else {
+            return Result.Err("Community not found.");
+        }
+    }),
+    // Get a list of members in a community
+    getCommunityMembers: query([
+        text
+    ], Vec2(User), (communityId)=>{
+        if (!communityId) {
+            throw new Error("Please provide a community ID.");
+        }
+        const principal = Principal3.fromText(communityId);
+        const communityOpt = communityStorage.get(principal);
+        if (!communityOpt) {
+            throw new Error("Community not found.");
+        }
+        return communityOpt.members;
+    }),
+    createCourse: update([
+        text,
+        text
+    ], Result(Course, text), (title, description)=>{
+        if (!title || !description) {
+            return Result.Err("Invalid input parameters. Please provide all required information.");
+        }
+        const id2 = Principal3.fromText(`${title}-${Date.now()}`);
+        const course = {
+            id: id2,
+            title,
+            description
+        };
+        courseStorage.insert(id2, course);
+        return Result.Ok(course);
+    }),
+    getCourseById: query([
+        text
+    ], Variant2({
+        Ok: Course,
+        Err: text
+    }), (id2)=>{
+        if (!id2) {
+            return {
+                Err: "Please provide the course ID."
+            };
+        }
+        const courseOpt = courseStorage.get(id2);
+        if ("Some" in courseOpt) {
+            return {
+                Ok: courseOpt.Some
+            };
+        } else {
+            return {
+                Err: "Course not found."
+            };
+        }
+    }),
+    listCourses: query([], Variant2({
+        Ok: Vec2(Course),
+        Err: text
+    }), ()=>{
+        const courses = courseStorage.entries().map((entry)=>entry[1]);
+        return {
+            Ok: courses
+        };
+    }),
+    updateCourse: update([
+        text,
+        text
+    ], Result(Course, text), (id2, newDescription)=>{
+        if (!id2 || !newDescription) {
+            return Result.Err("Invalid input parameters. Please provide all required information.");
+        }
+        const courseOpt = courseStorage.get(id2);
+        if ("Some" in courseOpt) {
+            const course = courseOpt.Some;
+            const updatedCourse = _extends({}, course, {
+                description: newDescription
+            });
+            courseStorage.insert(id2, updatedCourse);
+            return Result.Ok(updatedCourse);
+        } else {
+            return Result.Err("Course not found.");
+        }
+    }),
+    // Delete a course
+    deleteCourse: update([
+        text
+    ], Result(Course, text), (id2)=>{
+        if (!id2) {
+            return Result.Err("Invalid input parameters. Please provide the course ID.");
+        }
+        const courseOpt = courseStorage.get(id2);
+        if ("Some" in courseOpt) {
+            courseStorage.delete(id2);
+            return Result.Ok(courseOpt.Some);
+        } else {
+            return Result.Err("Course not found.");
+        }
     })
 });
+globalThis.crypto = {
+    // @ts-ignore
+    getRandomValues: ()=>{
+        let array = new Uint8Array(32);
+        for(let i = 0; i < array.length; i++){
+            array[i] = Math.floor(Math.random() * 256);
+        }
+        return array;
+    }
+};
 // <stdin>
 globalThis.process = {
     env: {}

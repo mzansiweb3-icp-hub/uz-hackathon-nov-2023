@@ -24,17 +24,17 @@ type AzleStableBTreeMap = StableBTreeMap<AzleStableBTreeMapKey, AzleStableBTreeM
 
 #[derive(Ord, PartialOrd, Eq, PartialEq, Clone)]
 struct AzleStableBTreeMapKey {
-    bytes: Vec<u8>,
+    candid_bytes: Vec<u8>,
 }
 
 impl Storable for AzleStableBTreeMapKey {
     fn to_bytes(&self) -> std::borrow::Cow<[u8]> {
-        std::borrow::Cow::Borrowed(&self.bytes)
+        std::borrow::Cow::Borrowed(&self.candid_bytes)
     }
 
     fn from_bytes(bytes: std::borrow::Cow<[u8]>) -> Self {
         AzleStableBTreeMapKey {
-            bytes: bytes.to_vec(),
+            candid_bytes: bytes.to_vec(),
         }
     }
 
@@ -43,17 +43,17 @@ impl Storable for AzleStableBTreeMapKey {
 
 #[derive(Ord, PartialOrd, Eq, PartialEq, Clone)]
 struct AzleStableBTreeMapValue {
-    bytes: Vec<u8>,
+    candid_bytes: Vec<u8>,
 }
 
 impl Storable for AzleStableBTreeMapValue {
     fn to_bytes(&self) -> std::borrow::Cow<[u8]> {
-        std::borrow::Cow::Borrowed(&self.bytes)
+        std::borrow::Cow::Borrowed(&self.candid_bytes)
     }
 
     fn from_bytes(bytes: std::borrow::Cow<[u8]>) -> Self {
         AzleStableBTreeMapValue {
-            bytes: bytes.to_vec(),
+            candid_bytes: bytes.to_vec(),
         }
     }
 

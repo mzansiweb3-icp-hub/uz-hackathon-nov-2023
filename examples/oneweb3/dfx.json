@@ -3,8 +3,8 @@
 
       "oneweb3": {
         "type": "custom",
-        "main": "src/backend/index.ts",
-        "candid": "src/backend/index.did",
+        "main": "backend/index.ts",
+        "candid": "backend/index.did",
         "build": "npx azle oneweb3",
         "wasm": ".azle/oneweb3/oneweb3.wasm",
         "gzip": true
