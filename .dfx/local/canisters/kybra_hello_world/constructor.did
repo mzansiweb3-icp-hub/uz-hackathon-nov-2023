@@ -1,0 +1,6 @@
+service : () -> {
+  get_message : () -> (text) query;
+  get_topic : () -> (text) query;
+  set_message : (text) -> ();
+  set_prompt : (text, int, text, text) -> ();
+}
